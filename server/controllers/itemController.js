@@ -1,7 +1,70 @@
+const { Item, ItemInfo } = require("../models/models");
+const ApiError = require("../error/ApiError");
+const uuid = require("uuid");
+const path = require("path");
+const { json } = require("sequelize");
+
 class ItemController {
-  async create(req, res) {}
-  async getAll(req, res) {}
-  async getOne(req, res) {}
+  async create(req, res, next) {
+    try {
+      const { name, price, categoryId, info, code, quantity } = req.body;
+      const { img } = req.files;
+      let fileName = uuid.v4() + ".jpg";
+      img.mv(path.resolve(__dirname, "..", "static", fileName));
+      const item = await Item.create({
+        name,
+        price,
+        categoryId,
+        quantity,
+        code,
+        img: fileName,
+      });
+
+      if (info) {
+        info = JSON.parse(info);
+        info.forEach((i) =>
+          ItemInfo.create({
+            title: i.title,
+            description: i.description,
+            itemId: i.id,
+          }),
+        );
+      }
+
+      return res.json(item);
+    } catch (error) {
+      next(ApiError.badRequest(error.message));
+    }
+  }
+
+  async getAll(req, res) {
+    let { categoryId, limit, page } = req.query;
+    page = page || 1;
+    limit = limit || 9;
+    let offset = page * limit - limit;
+    let items;
+    if (!categoryId) {
+      items = await Item.findAndCountAll({ limit, offset });
+    }
+    if (categoryId) {
+      items = await Item.findAndCountAll({
+        where: { categoryId },
+        limit,
+        offset,
+      });
+    }
+
+    return res.json(items);
+  }
+
+  async getOne(req, res) {
+    const { id } = req.params;
+    const item = await Item.findOne({
+      where: { id },
+      include: [{ model: ItemInfo, as: "info" }],
+    });
+    return res.json(item);
+  }
 }
 
 module.exports = new ItemController();

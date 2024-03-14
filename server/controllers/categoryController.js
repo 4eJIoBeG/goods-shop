@@ -7,7 +7,10 @@ class CategoryController {
     const category = await Category.create({ name });
     return res.json(category);
   }
-  async getAll(req, res) {}
+  async getAll(req, res) {
+    const category = await Category.findAll();
+    return res.json(category);
+  }
 }
 
 module.exports = new CategoryController();

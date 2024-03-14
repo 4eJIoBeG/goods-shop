@@ -20,7 +20,7 @@ const Item = sequelize.define("item", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING, unique: true, allowNull: false },
   price: { type: DataTypes.INTEGER, allowNull: false },
-  code: { type: DataTypes.STRING, allowNull: false },
+  code: { type: DataTypes.STRING, unique: true, allowNull: false },
   quantity: { type: DataTypes.INTEGER, defaultValue: 0 },
   img: { type: DataTypes.STRING, allowNull: false },
 });
@@ -32,7 +32,8 @@ const Category = sequelize.define("category", {
 
 const ItemInfo = sequelize.define("item_info", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  name: { type: DataTypes.STRING, unique: true, allowNull: false },
+  title: { type: DataTypes.STRING, allowNull: false },
+  description: { type: DataTypes.STRING, allowNull: false },
 });
 
 User.hasOne(Basket);
@@ -47,7 +48,7 @@ Item.belongsTo(Category);
 Item.hasMany(BasketItem);
 BasketItem.belongsTo(Item);
 
-Item.hasMany(ItemInfo);
+Item.hasMany(ItemInfo, { as: "info" });
 ItemInfo.belongsTo(Item);
 
 module.exports = { User, Basket, BasketItem, Item, ItemInfo, Category };
