@@ -1,0 +1,16 @@
+.message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.text {
+  text-align: center;
+  font-size: 31px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 120%;
+  color: var(--text-color);
+}
