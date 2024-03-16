@@ -40,7 +40,7 @@ class ItemController {
   async getAll(req, res) {
     let { categoryId, limit, page } = req.query;
     page = page || 1;
-    limit = limit || 9;
+    limit = limit || 24;
     let offset = page * limit - limit;
     let items;
     if (!categoryId) {
