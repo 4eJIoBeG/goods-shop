@@ -20,7 +20,7 @@ const Item = sequelize.define("item", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING, allowNull: false },
   price: { type: DataTypes.INTEGER, allowNull: false },
-  code: { type: DataTypes.STRING, unique: true, allowNull: false },
+  code: { type: DataTypes.STRING, allowNull: false },
   quantity: { type: DataTypes.INTEGER, defaultValue: 0 },
   category_name: { type: DataTypes.STRING, allowNull: true },
   img: { type: DataTypes.STRING, allowNull: false },
