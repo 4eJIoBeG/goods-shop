@@ -16,11 +16,15 @@ import {
   ADMIN_ROUTE,
   AUTH_ROUTE,
   BASKET_ROUTE,
+  ITEM_ROUTE,
   LOGIN_ROUTE,
   REGISTRATION_ROUTE,
   SHOP_ROUTE,
   SUCCESS_ROUTE,
 } from "./utils/consts.ts";
+import ItemPage from "./pages/ItemPage/ItemPage.tsx";
+import axios from "axios";
+import { BASE_URL_API } from "./helpers/API.ts";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +34,15 @@ const router = createBrowserRouter([
       {
         path: SHOP_ROUTE,
         element: <Shop />,
+      },
+      {
+        path: ITEM_ROUTE,
+        element: <ItemPage />,
+        errorElement: <Error />,
+        loader: async ({ params }) => {
+          const { data } = await axios.get(`${BASE_URL_API}/item/${params.id}`);
+          return data;
+        },
       },
     ],
   },
@@ -49,11 +62,7 @@ const router = createBrowserRouter([
   },
   {
     path: BASKET_ROUTE,
-    element: (
-      <RequireAuth>
-        <Layout />
-      </RequireAuth>
-    ),
+    element: <Layout />,
     children: [
       {
         path: BASKET_ROUTE,

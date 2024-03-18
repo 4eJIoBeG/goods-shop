@@ -11,7 +11,7 @@ const Search = forwardRef<HTMLInputElement, SearchProps>(function Input(
     <div className={styles["input-wrapper"]}>
       <input
         ref={ref}
-        placeholder="Ввведите блюдо или состав..."
+        placeholder="Поиск товара..."
         className={cn(styles["input"], className, {
           [styles["invalid"]]: !isValid,
         })}

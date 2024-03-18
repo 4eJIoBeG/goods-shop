@@ -7,7 +7,8 @@ const Error = () => {
   return (
     <div className={styles["message"]}>
       <img src="/success.png" alt="" />
-      <div className={styles["text"]}>Ошибка 404! Товар не существует.</div>
+      <div className={styles["text"]}>Ошибка 404!</div>
+      <div className={styles["text"]}>Страница не существует.</div>
       <Button appearence="big" onClick={() => navigate("/")}>
         На главную
       </Button>

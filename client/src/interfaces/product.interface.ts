@@ -9,4 +9,17 @@ export interface Product {
   createdAt: string;
   updatedAt: string;
   categoryId: number;
+  info: string[];
+}
+
+export interface ApiResponse {
+  rows: Product[];
+  сount: number;
+}
+
+export interface Category {
+  id: number;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
 }

@@ -1,25 +1,32 @@
 import { useEffect, useState } from "react";
-import { Product } from "../../interfaces/product.interface";
+import { ApiResponse, Product } from "../../interfaces/product.interface";
+import axios, { AxiosError } from "axios";
+import ShopList from "./ShopList/ShopList";
+import { BASE_URL_API } from "../../helpers/API";
 
 const Shop = () => {
   const [items, setItems] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | undefined>();
 
   const getItems = async () => {
     const params = {
       page: 1,
-      limit: 100,
+      limit: 50,
     };
     try {
-      const res = await fetch(
-        `http://localhost:5000/api/item?limit=${params.limit}&page=${params.page}`,
+      const { data } = await axios.get<ApiResponse>(
+        `${BASE_URL_API}/item?limit=${params.limit}&page=${params.page}`,
       );
-      const data = await res.json();
-      console.log(data.rows);
 
       setItems(data.rows);
     } catch (error) {
+      if (error instanceof AxiosError) {
+        setError(error.message);
+      }
       console.log(error);
-      return;
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -30,13 +37,9 @@ const Shop = () => {
   return (
     <div>
       Shop
-      {[...new Set(items)].map((item) => {
-        return (
-          <div key={item.id}>
-            <div>{item.category_name}</div>
-          </div>
-        );
-      })}
+      {error && <>Произошла ошибка {error}</>}
+      {!isLoading && <ShopList items={items} />}
+      {isLoading && <>Загрузка товаров...</>}
     </div>
   );
 };

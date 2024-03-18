@@ -15,7 +15,7 @@
   display: flex;
   flex-direction: column;
   align-self: center;
-  gap: 35px;
+  gap: 20px;
 }
 
 .link {
@@ -95,14 +95,27 @@
   width: 25px;
   height: 25px;
 }
-
+.auth {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  margin: 20px;
+}
 .navbar,
 .footer {
-  background: #00022e;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #6569b8;
   height: 100px;
   color: #fc86aa;
 }
-
+.logo img {
+  width: 64px;
+  height: 64px;
+  margin: 20px;
+}
 .container {
   display: flex;
   flex: 1;
