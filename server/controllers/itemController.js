@@ -37,33 +37,41 @@ class ItemController {
     }
   }
 
-  async getAll(req, res) {
+  async getAll(req, res, next) {
     let { categoryId, limit, page } = req.query;
     page = page || 1;
     limit = limit || 24;
     let offset = page * limit - limit;
     let items;
-    if (!categoryId) {
-      items = await Item.findAndCountAll({ limit, offset });
-    }
-    if (categoryId) {
-      items = await Item.findAndCountAll({
-        where: { categoryId },
-        limit,
-        offset,
-      });
-    }
+    try {
+      if (!categoryId) {
+        items = await Item.findAndCountAll({ limit, offset });
+      }
+      if (categoryId) {
+        items = await Item.findAndCountAll({
+          where: { categoryId },
+          limit,
+          offset,
+        });
+      }
 
-    return res.json(items);
+      return res.json(items);
+    } catch (error) {
+      next(ApiError.badRequest(error.message));
+    }
   }
 
-  async getOne(req, res) {
+  async getOne(req, res, next) {
     const { id } = req.params;
-    const item = await Item.findOne({
-      where: { id },
-      include: [{ model: ItemInfo, as: "info" }],
-    });
-    return res.json(item);
+    try {
+      const item = await Item.findOne({
+        where: { id },
+        include: [{ model: ItemInfo, as: "info" }],
+      });
+      return res.json(item);
+    } catch (error) {
+      next(ApiError.badRequest(error.message));
+    }
   }
 }
 
