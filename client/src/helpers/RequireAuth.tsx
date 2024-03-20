@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 
 const RequireAuth = ({ children }: { children: ReactNode }) => {
-  const jwt = false;
+  const jwt = localStorage.getItem("token");
   if (!jwt) {
     return <Navigate to="/auth/login" replace />;
   }

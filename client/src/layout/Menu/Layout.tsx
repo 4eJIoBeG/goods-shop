@@ -29,6 +29,7 @@ export const Layout = () => {
   };
 
   const logout = () => {
+    localStorage.removeItem("token");
     navigate("/auth/login");
   };
 
@@ -54,7 +55,7 @@ export const Layout = () => {
             Корзина
           </Button>
           <Button className={styles["exit"]} onClick={logout}>
-            Авторизация
+            {localStorage.getItem("token") ? "Выход" : "Авторизация"}
           </Button>
         </div>
       </div>
