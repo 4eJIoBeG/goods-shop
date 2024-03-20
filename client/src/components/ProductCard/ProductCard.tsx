@@ -20,6 +20,7 @@ const ProductCard = (props: ProductCardProps) => {
           <div className={styles["price"]}>
             {price}&nbsp;
             <span className={styles["currency"]}>₽</span>
+            {/* {Math.ceil(price * 1.2)}&nbsp; */}
           </div>
           <button className={styles["add-to-cart"]} onClick={add}>
             <img src="/shop.svg" alt="add-to-cart-icon" />

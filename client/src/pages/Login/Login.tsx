@@ -3,13 +3,10 @@ import Button from "../../components/Button/Button";
 import Header from "../../components/Header/Header";
 import Input from "../../components/Input/Input";
 import styles from "./Login.module.css";
-import { FormEvent, useState } from "react";
-import axios, { AxiosError } from "axios";
-import { BASE_URL_API } from "../../helpers/API";
-import { LoginResponse } from "../../interfaces/auth.interface";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../store/store";
-import { userActions } from "../../store/user.slice";
+import { FormEvent, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { login, userActions } from "../../store/user.slice";
 
 export type LoginForm = {
   email: { value: string };
@@ -18,39 +15,35 @@ export type LoginForm = {
 
 const Login = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const [error, setError] = useState<string | null>();
   const navigate = useNavigate();
+  const { token, loginErrorMessage } = useSelector(
+    (state: RootState) => state.user,
+  );
+
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+  }, [token, navigate]);
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    setError(null);
+    dispatch(userActions.clearLoginErrorMessage());
     const target = event.target as typeof event.target & LoginForm;
     const { email, password } = target;
     await sendLogin(email.value, password.value);
   };
 
   const sendLogin = async (email: string, password: string) => {
-    try {
-      const { data } = await axios.post<LoginResponse>(
-        `${BASE_URL_API}/user/login`,
-        {
-          email,
-          password,
-        },
-      );
-      dispatch(userActions.addToken(data.token));
-      navigate("/");
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        setError(error.response?.data.message);
-      }
-    }
+    dispatch(login({ email, password }));
   };
 
   return (
     <div className={styles["login"]}>
       <Header>Вход</Header>
-      {error && <div className={styles["error"]}>{error}</div>}
+      {loginErrorMessage && (
+        <div className={styles["error"]}>{loginErrorMessage}</div>
+      )}
       <form className={styles["form"]} onSubmit={submit}>
         <div className={styles["field"]}>
           <label htmlFor="email">Ваш Еmail</label>

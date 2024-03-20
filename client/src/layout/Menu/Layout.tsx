@@ -7,12 +7,20 @@ import axios, { AxiosError } from "axios";
 import { BASE_URL_API } from "../../helpers/API";
 import { useEffect, useState } from "react";
 import { Category } from "../../pages/Category/Category.props";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { userActions } from "../../store/user.slice";
+import { jwtDecode } from "jwt-decode";
+import { JwtInterface } from "../../interfaces/jwtDecode.interface";
 
 export const Layout = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | undefined>();
   const [category, setCategory] = useState<Category[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
+  const token = useSelector((state: RootState) => state.user.token);
+  const decodedToken = token ? jwtDecode<JwtInterface>(token) : undefined;
 
   const getCategory = async () => {
     try {
@@ -29,12 +37,16 @@ export const Layout = () => {
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
+    dispatch(userActions.logout());
     navigate("/auth/login");
   };
 
   const basket = () => {
     navigate("/basket");
+  };
+
+  const admin = () => {
+    navigate("/admin");
   };
 
   useEffect(() => {
@@ -51,11 +63,16 @@ export const Layout = () => {
           <Search />
         </div>
         <div className={styles["auth"]}>
+          {decodedToken && decodedToken.role === "ADMIN" && (
+            <Button className={styles["exit"]} onClick={admin}>
+              Админ панель
+            </Button>
+          )}
           <Button className={styles["exit"]} onClick={basket}>
             Корзина
           </Button>
           <Button className={styles["exit"]} onClick={logout}>
-            {localStorage.getItem("token") ? "Выход" : "Авторизация"}
+            {token ? "Выход" : "Авторизация"}
           </Button>
         </div>
       </div>
