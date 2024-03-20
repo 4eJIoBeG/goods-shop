@@ -16,10 +16,3 @@ export interface ApiResponse {
   rows: Product[];
   сount: number;
 }
-
-export interface Category {
-  id: number;
-  name: string;
-  updatedAt: string;
-  createdAt: string;
-}

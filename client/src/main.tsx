@@ -27,6 +27,8 @@ import ItemPage from "./pages/ItemPage/ItemPage.tsx";
 import axios from "axios";
 import { BASE_URL_API } from "./helpers/API.ts";
 import Category from "./pages/Category/Category.tsx";
+import { Provider } from "react-redux";
+import { store } from "./store/store.ts";
 
 const router = createBrowserRouter([
   {
@@ -116,6 +118,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>,
 );

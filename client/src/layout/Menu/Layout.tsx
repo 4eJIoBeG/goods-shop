@@ -4,9 +4,9 @@ import Button from "../../components/Button/Button";
 import cn from "classnames";
 import Search from "../../components/Search/Search";
 import axios, { AxiosError } from "axios";
-import { Category } from "../../interfaces/product.interface";
 import { BASE_URL_API } from "../../helpers/API";
 import { useEffect, useState } from "react";
+import { Category } from "../../pages/Category/Category.props";
 
 export const Layout = () => {
   const navigate = useNavigate();
