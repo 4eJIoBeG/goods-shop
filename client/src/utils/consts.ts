@@ -4,5 +4,6 @@ export const REGISTRATION_ROUTE = "registration";
 export const SHOP_ROUTE = "/";
 export const BASKET_ROUTE = "/basket";
 export const ITEM_ROUTE = "/item/:id";
+export const CATEGORY_ROUTE = "/category/:id";
 export const SUCCESS_ROUTE = "success";
 export const AUTH_ROUTE = "/auth/";

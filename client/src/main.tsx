@@ -16,6 +16,7 @@ import {
   ADMIN_ROUTE,
   AUTH_ROUTE,
   BASKET_ROUTE,
+  CATEGORY_ROUTE,
   ITEM_ROUTE,
   LOGIN_ROUTE,
   REGISTRATION_ROUTE,
@@ -25,6 +26,7 @@ import {
 import ItemPage from "./pages/ItemPage/ItemPage.tsx";
 import axios from "axios";
 import { BASE_URL_API } from "./helpers/API.ts";
+import Category from "./pages/Category/Category.tsx";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +43,17 @@ const router = createBrowserRouter([
         errorElement: <Error />,
         loader: async ({ params }) => {
           const { data } = await axios.get(`${BASE_URL_API}/item/${params.id}`);
+          return data;
+        },
+      },
+      {
+        path: CATEGORY_ROUTE,
+        element: <Category />,
+        errorElement: <Error />,
+        loader: async ({ params }) => {
+          const { data } = await axios.get(
+            `${BASE_URL_API}/category/${params.id}`,
+          );
           return data;
         },
       },
