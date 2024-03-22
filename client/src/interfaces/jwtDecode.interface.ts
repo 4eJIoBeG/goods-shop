@@ -4,4 +4,6 @@ export interface JwtInterface {
   iat: number;
   id: number;
   role: string;
+  name: string;
+  phone: string;
 }
