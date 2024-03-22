@@ -7,3 +7,4 @@ export const ITEM_ROUTE = "/item/:id";
 export const CATEGORY_ROUTE = "/category/:id";
 export const SUCCESS_ROUTE = "success";
 export const AUTH_ROUTE = "/auth/";
+export const PROFILE_ROUTE = "/profile";

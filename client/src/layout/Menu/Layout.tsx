@@ -49,6 +49,10 @@ export const Layout = () => {
     navigate("/admin");
   };
 
+  const profile = () => {
+    navigate("/profile");
+  };
+
   useEffect(() => {
     getCategory();
   }, []);
@@ -68,6 +72,9 @@ export const Layout = () => {
               Админ панель
             </Button>
           )}
+          <Button className={styles["exit"]} onClick={profile}>
+            Профиль
+          </Button>
           <Button className={styles["exit"]} onClick={basket}>
             Корзина
           </Button>

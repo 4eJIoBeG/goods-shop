@@ -19,6 +19,7 @@ import {
   CATEGORY_ROUTE,
   ITEM_ROUTE,
   LOGIN_ROUTE,
+  PROFILE_ROUTE,
   REGISTRATION_ROUTE,
   SHOP_ROUTE,
   SUCCESS_ROUTE,
@@ -29,6 +30,7 @@ import { BASE_URL_API } from "./helpers/API.ts";
 import Category from "./pages/Category/Category.tsx";
 import { Provider } from "react-redux";
 import { store } from "./store/store.ts";
+import ProfilePage from "./pages/ProfilePage/ProfilePage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -72,6 +74,20 @@ const router = createBrowserRouter([
       {
         path: ADMIN_ROUTE,
         element: <Admin />,
+      },
+    ],
+  },
+  {
+    path: PROFILE_ROUTE,
+    element: (
+      <RequireAuth>
+        <Layout />
+      </RequireAuth>
+    ),
+    children: [
+      {
+        path: PROFILE_ROUTE,
+        element: <ProfilePage />,
       },
     ],
   },
