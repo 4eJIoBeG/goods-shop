@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { jwtDecode } from "jwt-decode";
 import { JwtInterface } from "../../interfaces/jwtDecode.interface";
+import BackButton from "../../components/BackButton";
 
 const ProfilePage = () => {
   const token = useSelector((state: RootState) => state.user.token);
@@ -10,6 +11,7 @@ const ProfilePage = () => {
 
   return (
     <div>
+      <BackButton />
       <h1>Профиль пользователя: {decodedToken?.name}</h1>
       <div>E-Mail: {decodedToken?.email}</div>
       <div>
