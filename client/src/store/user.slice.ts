@@ -38,6 +38,30 @@ export const login = createAsyncThunk(
     }
   },
 );
+export const register = createAsyncThunk(
+  "user/registration",
+  async (params: {
+    email: string;
+    password: string;
+    name: string;
+    phone: string;
+  }) => {
+    try {
+      const { data } = await axios.post(`${BASE_URL_API}/user/registration`, {
+        email: params.email,
+        password: params.password,
+        name: params.name,
+        phone: params.phone,
+      });
+
+      return data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(error.response?.data.message);
+      }
+    }
+  },
+);
 
 export const userSlice = createSlice({
   name: "user",
