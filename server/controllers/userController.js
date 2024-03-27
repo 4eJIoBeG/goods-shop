@@ -30,7 +30,13 @@ class UserController {
       phone,
     });
     const basket = await Basket.create({ userId: user.id });
-    const token = generateJwt(user.id, user.email, user.role);
+    const token = generateJwt(
+      user.id,
+      user.email,
+      user.role,
+      user?.name,
+      user?.phone,
+    );
 
     return res.json({ token });
   }

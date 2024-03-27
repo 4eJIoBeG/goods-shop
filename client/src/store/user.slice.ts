@@ -12,6 +12,7 @@ export interface UserPersistentState {
 export interface UserState {
   token: string | null;
   loginErrorMessage?: string;
+  registrationErrorMessage?: string;
 }
 
 const initialState: UserState = {
@@ -38,7 +39,8 @@ export const login = createAsyncThunk(
     }
   },
 );
-export const register = createAsyncThunk(
+
+export const registration = createAsyncThunk(
   "user/registration",
   async (params: {
     email: string;
@@ -72,6 +74,9 @@ export const userSlice = createSlice({
     },
     clearLoginErrorMessage: (state) => {
       state.loginErrorMessage = undefined;
+    },
+    clearRegistrationErrorMessage: (state) => {
+      state.registrationErrorMessage = undefined;
     },
   },
   extraReducers: (builder) => {
