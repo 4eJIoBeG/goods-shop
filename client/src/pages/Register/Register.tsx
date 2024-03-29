@@ -6,7 +6,7 @@ import styles from "./Register.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { registration, userActions } from "../../store/user.slice";
-import { FormEvent } from "react";
+import { FormEvent, useEffect } from "react";
 
 export type RegisterForm = {
   email: { value: string };
@@ -18,9 +18,15 @@ export type RegisterForm = {
 const Register = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { registrationErrorMessage } = useSelector(
+  const { token, registrationErrorMessage } = useSelector(
     (state: RootState) => state.user,
   );
+
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+  }, [token, navigate]);
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
@@ -28,7 +34,6 @@ const Register = () => {
     const target = event.target as typeof event.target & RegisterForm;
     const { email, password, name, phone } = target;
     await register(email.value, password.value, name.value, phone.value);
-    navigate("/auth/login");
   };
 
   const register = async (

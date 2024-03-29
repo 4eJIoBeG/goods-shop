@@ -89,6 +89,15 @@ export const userSlice = createSlice({
     builder.addCase(login.rejected, (state, action) => {
       state.loginErrorMessage = action.error.message;
     });
+    builder.addCase(registration.fulfilled, (state, action) => {
+      if (!action.payload) {
+        return;
+      }
+      state.token = action.payload.token;
+    });
+    builder.addCase(registration.rejected, (state, action) => {
+      state.registrationErrorMessage = action.error.message;
+    });
   },
 });
 
