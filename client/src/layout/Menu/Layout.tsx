@@ -6,12 +6,12 @@ import Search from "../../components/Search/Search";
 import axios, { AxiosError } from "axios";
 import { BASE_URL_API } from "../../helpers/API";
 import { useEffect, useState } from "react";
-import { Category } from "../../pages/Category/Category.props";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { userActions } from "../../store/user.slice";
 import { jwtDecode } from "jwt-decode";
 import { JwtInterface } from "../../interfaces/jwtDecode.interface";
+import { Category } from "../../interfaces/category.interface";
 
 export const Layout = () => {
   const navigate = useNavigate();
@@ -101,7 +101,7 @@ export const Layout = () => {
               return (
                 <NavLink
                   key={cat.id}
-                  to={`/category/${cat.id}`}
+                  to={`/${cat.id}`}
                   className={({ isActive }) =>
                     cn(styles["link"], {
                       [styles.active]: isActive,
