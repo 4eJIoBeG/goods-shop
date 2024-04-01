@@ -27,7 +27,6 @@ import {
 import ItemPage from "./pages/ItemPage/ItemPage.tsx";
 import axios from "axios";
 import { BASE_URL_API } from "./helpers/API.ts";
-import Category from "./pages/Category/Category.tsx";
 import { Provider } from "react-redux";
 import { store } from "./store/store.ts";
 import ProfilePage from "./pages/ProfilePage/ProfilePage.tsx";
@@ -52,7 +51,7 @@ const router = createBrowserRouter([
       },
       {
         path: CATEGORY_ROUTE,
-        element: <Category />,
+        element: <Shop />,
         errorElement: <Error />,
         loader: async ({ params }) => {
           const { data } = await axios.get(

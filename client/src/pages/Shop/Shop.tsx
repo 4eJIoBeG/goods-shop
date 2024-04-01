@@ -3,9 +3,13 @@ import { ApiResponse, Product } from "../../interfaces/product.interface";
 import axios, { AxiosError } from "axios";
 import ShopList from "./ShopList/ShopList";
 import { BASE_URL_API } from "../../helpers/API";
+import { Category } from "../../interfaces/category.interface";
+import { useLoaderData } from "react-router-dom";
 
 const Shop = () => {
   const [items, setItems] = useState<Product[]>([]);
+  const categoryId = useLoaderData() as Category;
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | undefined>();
 
@@ -13,8 +17,14 @@ const Shop = () => {
     const params = {
       page: 1,
       limit: 50,
+      categoryId: categoryId.id,
     };
     try {
+      if (categoryId) {
+        const { data } = await axios.get<ApiResponse>(
+          `${BASE_URL_API}/item?limit=${params.limit}&page=${params.page}&categoryId=${categoryId.id}`,
+        );
+      }
       const { data } = await axios.get<ApiResponse>(
         `${BASE_URL_API}/item?limit=${params.limit}&page=${params.page}`,
       );

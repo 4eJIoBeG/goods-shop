@@ -101,7 +101,7 @@ export const Layout = () => {
               return (
                 <NavLink
                   key={cat.id}
-                  to={`/${cat.id}`}
+                  to={`/category/${cat.id}`}
                   className={({ isActive }) =>
                     cn(styles["link"], {
                       [styles.active]: isActive,
