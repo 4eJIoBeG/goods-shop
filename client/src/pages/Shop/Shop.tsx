@@ -5,33 +5,52 @@ import ShopList from "./ShopList/ShopList";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { getAll, getAllInCategory } from "../../store/item.slice";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import Pagination from "../../components/Pagination/Pagination";
 
 const Shop = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = searchParams.get("page") || 1;
+
   const data = useSelector((state: RootState) => state.item.items);
   const [items, setItems] = useState<Product[]>([]);
   const { categoryId } = useParams();
-  console.log(categoryId);
+  const navigate = useNavigate();
+
+  const [currentPage, setCurrentPage] = useState(Number(page));
+  const [totalPages, setTotalPages] = useState(0);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | undefined>();
 
-  const getItems = async () => {
+  const getItems = async (page: number) => {
     try {
       if (categoryId) {
-        dispatch(
+        const { payload } = await dispatch(
           getAllInCategory({
-            page: 1,
+            page,
             limit: 50,
             categoryId: parseInt(categoryId),
           }),
         );
+        if (!payload) {
+          return;
+        }
+        if (typeof payload === "object" && payload.rows && payload.count) {
+          setTotalPages(Math.ceil(payload.count / 50));
+          setItems(payload.rows);
+        }
       } else {
-        dispatch(getAll({ page: 1, limit: 50 }));
+        const { payload } = await dispatch(getAll({ page, limit: 50 }));
+        if (!payload) {
+          return;
+        }
+        if (typeof payload === "object" && payload.rows && payload.count) {
+          setTotalPages(Math.ceil(payload.count / 50));
+          setItems(payload.rows);
+        }
       }
-
-      setItems(data);
     } catch (error) {
       if (error instanceof AxiosError) {
         setError(error.message);
@@ -42,20 +61,37 @@ const Shop = () => {
     }
   };
 
-  useEffect(() => {
-    getItems();
-  }, [categoryId]);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    setSearchParams({ page: String(page) });
+    navigate(`?${new URLSearchParams(searchParams).toString()}`);
+  };
 
   useEffect(() => {
-    setItems(data);
+    setSearchParams({ page: currentPage.toString() });
+  }, [currentPage, setSearchParams]);
+
+  useEffect(() => {
+    getItems(Number(currentPage));
+  }, [currentPage, categoryId]);
+
+  useEffect(() => {
+    setItems(data.rows);
+    setTotalPages(Math.ceil(data.count / 50));
   }, [data]);
 
   return (
     <div>
-      Shop
       {error && <>Произошла ошибка {error}</>}
       {!isLoading && <ShopList items={items} />}
       {isLoading && <>Загрузка товаров...</>}
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={Number(currentPage)}
+          totalPages={totalPages}
+          setCurrentPage={handlePageChange}
+        />
+      )}
     </div>
   );
 };

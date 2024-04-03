@@ -11,7 +11,7 @@ const ProductCard = (props: ProductCardProps) => {
   };
 
   return (
-    <Link to={`/item/${id}`} className={styles["link"]}>
+    <Link to={`/items/item/${id}`} className={styles["link"]}>
       <div className={styles["card"]}>
         <div
           className={styles["header"]}

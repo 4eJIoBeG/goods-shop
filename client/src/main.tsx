@@ -41,7 +41,7 @@ const router = createBrowserRouter([
         element: <Shop />,
       },
       {
-        path: `${ITEM_ROUTE}/:id`,
+        path: `${SHOP_ROUTE}${ITEM_ROUTE}/:id`,
         element: <ItemPage />,
         errorElement: <Error />,
         loader: async ({ params }) => {
@@ -50,7 +50,7 @@ const router = createBrowserRouter([
         },
       },
       {
-        path: `${CATEGORY_ROUTE}/:categoryId`,
+        path: `${SHOP_ROUTE}${CATEGORY_ROUTE}/:categoryId`,
         element: <Shop />,
         errorElement: <Error />,
       },

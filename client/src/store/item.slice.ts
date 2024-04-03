@@ -1,44 +1,64 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import { BASE_URL_API } from "../helpers/API";
-import { ApiResponse, Product } from "../interfaces/product.interface";
+import { Product } from "../interfaces/product.interface";
 
-const initialState = {
-  items: [] as Product[],
+export interface ItemState {
+  items: { rows: Product[]; count: number };
+  isLoading: boolean;
+  error: string | null;
+}
+
+const initialState: ItemState = {
+  items: { rows: [], count: 0 },
+  isLoading: false,
+  error: null,
 };
 
-export const getAllInCategory = createAsyncThunk(
+export const getAllInCategory = createAsyncThunk<
+  { rows: Product[]; count: number },
+  { page: number; limit: number; categoryId: number },
+  { rejectValue: string }
+>(
   "item/getAllInCategory",
-  async (params: { page: number; limit: number; categoryId: number }) => {
+  async ({ page, limit, categoryId }, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get<ApiResponse>(
-        `${BASE_URL_API}/item?page=${params.page}&limit=${params.limit}&categoryId=${params.categoryId}`,
+      const { data } = await axios.get(
+        `${BASE_URL_API}/item?page=${page}&limit=${limit}&categoryId=${categoryId}`,
       );
-
-      return data;
+      return { rows: data.rows, count: data.count };
     } catch (error) {
       if (error instanceof AxiosError) {
-        throw new Error(error.response?.data.message);
+        return rejectWithValue(
+          error.response?.data.message || "Произошла ошибка",
+        );
+      } else {
+        return rejectWithValue("Произошла неизвестная ошибка");
       }
     }
   },
 );
-export const getAll = createAsyncThunk(
-  "item/getAll",
-  async (params: { page: number; limit: number }) => {
-    try {
-      const { data } = await axios.get<ApiResponse>(
-        `${BASE_URL_API}/item?page=${params.page}&limit=${params.limit}`,
-      );
 
-      return data;
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        throw new Error(error.response?.data.message);
-      }
+export const getAll = createAsyncThunk<
+  { rows: Product[]; count: number },
+  { page: number; limit: number },
+  { rejectValue: string }
+>("item/getAll", async ({ page, limit }, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get(
+      `${BASE_URL_API}/item?page=${page}&limit=${limit}`,
+    );
+    return { rows: data.rows, count: data.count };
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return rejectWithValue(
+        error.response?.data.message || "Произошла ошибка",
+      );
+    } else {
+      return rejectWithValue("Произошла неизвестная ошибка");
     }
-  },
-);
+  }
+});
 
 export const itemSlice = createSlice({
   name: "item",
@@ -49,13 +69,15 @@ export const itemSlice = createSlice({
       if (!action.payload) {
         return;
       }
-      state.items = action.payload.rows;
+      state.items.rows = action.payload.rows;
+      state.items.count = action.payload.count;
     });
     builder.addCase(getAll.fulfilled, (state, action) => {
       if (!action.payload) {
         return;
       }
-      state.items = action.payload.rows;
+      state.items.rows = action.payload.rows;
+      state.items.count = action.payload.count;
     });
   },
 });

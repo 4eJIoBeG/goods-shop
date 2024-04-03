@@ -72,9 +72,11 @@ export const Layout = () => {
               Админ панель
             </Button>
           )}
-          <Button className={styles["exit"]} onClick={profile}>
-            Профиль
-          </Button>
+          {token && (
+            <Button className={styles["exit"]} onClick={profile}>
+              Профиль
+            </Button>
+          )}
           <Button className={styles["exit"]} onClick={basket}>
             Корзина
           </Button>
@@ -88,7 +90,7 @@ export const Layout = () => {
           <div className={styles["menu"]}>
             {error && <>Произошла ошибка {error}</>}
             <NavLink
-              to="/"
+              to="/items"
               className={({ isActive }) =>
                 cn(styles["link"], {
                   [styles.active]: isActive,
@@ -101,7 +103,7 @@ export const Layout = () => {
               return (
                 <NavLink
                   key={cat.id}
-                  to={`/category/${cat.id}`}
+                  to={`/items/category/${cat.id}`}
                   className={({ isActive }) =>
                     cn(styles["link"], {
                       [styles.active]: isActive,
