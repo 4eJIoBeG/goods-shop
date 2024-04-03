@@ -1,44 +1,37 @@
 import { useEffect, useState } from "react";
-import { ApiResponse, Product } from "../../interfaces/product.interface";
-import axios, { AxiosError } from "axios";
+import { Product } from "../../interfaces/product.interface";
+import { AxiosError } from "axios";
 import ShopList from "./ShopList/ShopList";
-import { BASE_URL_API } from "../../helpers/API";
-import { Category } from "../../interfaces/category.interface";
-import { useLoaderData } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { getItems } from "../../store/item.slice";
+import { getAll, getAllInCategory } from "../../store/item.slice";
+import { useParams } from "react-router-dom";
 
 const Shop = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const data = useSelector((state: RootState) => state.item.items);
   const [items, setItems] = useState<Product[]>([]);
-  const { id } = useLoaderData() as Category;
-  // const data = useSelector((state: RootState) => state.item);
+  const { categoryId } = useParams();
+  console.log(categoryId);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | undefined>();
 
-  // const getItemsAll = async (
-  //   page: number,
-  //   limit: number,
-  //   categoryId: number,
-  // ) => {
-  //   dispatch(getItems({ page, limit, categoryId }));
-  // };
-
-  const getItems = async (page: number, limit: number, categoryId: number) => {
+  const getItems = async () => {
     try {
-      if (!categoryId) {
-        const { data } = await axios.get<ApiResponse>(
-          `${BASE_URL_API}/item?limit=${limit}&page=${page}`,
+      if (categoryId) {
+        dispatch(
+          getAllInCategory({
+            page: 1,
+            limit: 50,
+            categoryId: parseInt(categoryId),
+          }),
         );
+      } else {
+        dispatch(getAll({ page: 1, limit: 50 }));
       }
 
-      const { data } = await axios.get<ApiResponse>(
-        `${BASE_URL_API}/item?limit=${limit}&page=${page}&categoryId=${categoryId}`,
-      );
-
-      setItems(data.rows);
+      setItems(data);
     } catch (error) {
       if (error instanceof AxiosError) {
         setError(error.message);
@@ -50,9 +43,12 @@ const Shop = () => {
   };
 
   useEffect(() => {
-    const categoryId = id || 1;
-    getItems(1, 50, categoryId);
-  }, [id]);
+    getItems();
+  }, [categoryId]);
+
+  useEffect(() => {
+    setItems(data);
+  }, [data]);
 
   return (
     <div>

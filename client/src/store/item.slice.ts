@@ -7,12 +7,28 @@ const initialState = {
   items: [] as Product[],
 };
 
-export const getItems = createAsyncThunk(
-  "item/getAll",
+export const getAllInCategory = createAsyncThunk(
+  "item/getAllInCategory",
   async (params: { page: number; limit: number; categoryId: number }) => {
     try {
       const { data } = await axios.get<ApiResponse>(
         `${BASE_URL_API}/item?page=${params.page}&limit=${params.limit}&categoryId=${params.categoryId}`,
+      );
+
+      return data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(error.response?.data.message);
+      }
+    }
+  },
+);
+export const getAll = createAsyncThunk(
+  "item/getAll",
+  async (params: { page: number; limit: number }) => {
+    try {
+      const { data } = await axios.get<ApiResponse>(
+        `${BASE_URL_API}/item?page=${params.page}&limit=${params.limit}`,
       );
 
       return data;
@@ -29,7 +45,13 @@ export const itemSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getItems.fulfilled, (state, action) => {
+    builder.addCase(getAllInCategory.fulfilled, (state, action) => {
+      if (!action.payload) {
+        return;
+      }
+      state.items = action.payload.rows;
+    });
+    builder.addCase(getAll.fulfilled, (state, action) => {
       if (!action.payload) {
         return;
       }

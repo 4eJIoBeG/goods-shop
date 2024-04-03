@@ -41,7 +41,7 @@ const router = createBrowserRouter([
         element: <Shop />,
       },
       {
-        path: ITEM_ROUTE,
+        path: `${ITEM_ROUTE}/:id`,
         element: <ItemPage />,
         errorElement: <Error />,
         loader: async ({ params }) => {
@@ -50,15 +50,9 @@ const router = createBrowserRouter([
         },
       },
       {
-        path: CATEGORY_ROUTE,
+        path: `${CATEGORY_ROUTE}/:categoryId`,
         element: <Shop />,
         errorElement: <Error />,
-        loader: async ({ params }) => {
-          const { data } = await axios.get(
-            `${BASE_URL_API}/category/${params.id}`,
-          );
-          return data;
-        },
       },
     ],
   },
