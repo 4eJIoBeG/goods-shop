@@ -24,7 +24,6 @@ const Item = sequelize.define("item", {
   price: { type: DataTypes.INTEGER, allowNull: false },
   code: { type: DataTypes.STRING, allowNull: false },
   quantity: { type: DataTypes.INTEGER, defaultValue: 0 },
-  category_name: { type: DataTypes.STRING, allowNull: true },
   img: { type: DataTypes.STRING, allowNull: false },
 });
 

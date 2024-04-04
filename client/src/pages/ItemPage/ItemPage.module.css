@@ -1,0 +1,12 @@
+.add-to-cart {
+  background: var(--primary-color);
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  border: none;
+  cursor: pointer;
+}
+
+.add-to-cart:hover {
+  background: var(--primary-hover-color);
+}

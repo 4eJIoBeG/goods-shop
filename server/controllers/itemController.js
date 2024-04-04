@@ -3,6 +3,7 @@ const ApiError = require("../error/ApiError");
 const uuid = require("uuid");
 const path = require("path");
 const { json } = require("sequelize");
+const fs = require("fs").promises;
 
 class ItemController {
   async create(req, res, next) {
@@ -69,6 +70,35 @@ class ItemController {
         include: [{ model: ItemInfo, as: "info" }],
       });
       return res.json(item);
+    } catch (error) {
+      next(ApiError.badRequest(error.message));
+    }
+  }
+
+  async delete(req, res, next) {
+    try {
+      const { id } = req.params;
+      const item = await Item.findOne({
+        where: { id },
+        include: [{ model: ItemInfo, as: "info" }],
+      });
+      if (item) {
+        const imagePath = path.resolve(
+          __dirname,
+          "..",
+          "static",
+          item.dataValues.img,
+        );
+        if (await fs.access(imagePath, fs.constants.F_OK)) {
+          await fs.unlink(imagePath);
+        }
+        await Item.destroy({
+          where: { id },
+          include: [{ model: ItemInfo, as: "info" }],
+        });
+        return res.json({ message: "Deleted successfully" });
+      }
+      throw new Error("There is no item with this ID");
     } catch (error) {
       next(ApiError.badRequest(error.message));
     }

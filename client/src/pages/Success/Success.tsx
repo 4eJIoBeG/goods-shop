@@ -8,7 +8,7 @@ const Success = () => {
     <div className={styles["message"]}>
       <img src="/success.png" alt="" />
       <div className={styles["text"]}>Ваш заказ успешно оформлен!</div>
-      <Button appearence="big" onClick={() => navigate("/")}>
+      <Button appearence="big" onClick={() => navigate("/items")}>
         Сделать новый
       </Button>
     </div>
