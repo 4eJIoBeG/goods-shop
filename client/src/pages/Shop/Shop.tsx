@@ -84,13 +84,15 @@ const Shop = () => {
     <div>
       {error && <>Произошла ошибка {error}</>}
       {isLoading && <>Загрузка товаров...</>}
-      {!isLoading && items.length ? (
-        <ShopList items={items} />
-      ) : (
-        "В данной категории товаров нет"
-      )}
 
-      {totalPages > 1 && (
+      {!isLoading &&
+        (items.length ? (
+          <ShopList items={items} />
+        ) : (
+          "В данной категории товаров нет"
+        ))}
+
+      {!isLoading && totalPages > 1 && (
         <Pagination
           currentPage={Number(currentPage)}
           totalPages={totalPages}
