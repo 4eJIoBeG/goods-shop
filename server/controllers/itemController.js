@@ -96,9 +96,9 @@ class ItemController {
           where: { id },
           include: [{ model: ItemInfo, as: "info" }],
         });
-        return res.json({ message: "Deleted successfully" });
+        return res.json({ message: "Товар успешно удален" });
       }
-      throw new Error("There is no item with this ID");
+      throw new Error("Товар с указанным ID не найден");
     } catch (error) {
       next(ApiError.badRequest(error.message));
     }

@@ -7,12 +7,14 @@ export interface ItemState {
   items: { rows: Product[]; count: number };
   isLoading: boolean;
   error: string | null;
+  searchReq: string | "";
 }
 
 const initialState: ItemState = {
   items: { rows: [], count: 0 },
   isLoading: false,
   error: null,
+  searchReq: "",
 };
 
 export const getAllInCategory = createAsyncThunk<
@@ -63,7 +65,14 @@ export const getAll = createAsyncThunk<
 export const itemSlice = createSlice({
   name: "item",
   initialState,
-  reducers: {},
+  reducers: {
+    search: (state, action) => {
+      state.searchReq = action.payload;
+    },
+    searchClear: (state) => {
+      state.searchReq = "";
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getAllInCategory.fulfilled, (state, action) => {
       if (!action.payload) {
@@ -83,4 +92,4 @@ export const itemSlice = createSlice({
 });
 
 export default itemSlice.reducer;
-export const userActions = itemSlice.actions;
+export const itemActions = itemSlice.actions;

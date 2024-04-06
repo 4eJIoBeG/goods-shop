@@ -4,7 +4,7 @@ import { AxiosError } from "axios";
 import ShopList from "./ShopList/ShopList";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { getAll, getAllInCategory } from "../../store/item.slice";
+import { getAll, getAllInCategory, itemActions } from "../../store/item.slice";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Pagination from "../../components/Pagination/Pagination";
 
@@ -24,6 +24,8 @@ const Shop = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | undefined>();
 
+  const searchText = useSelector((state: RootState) => state.item.searchReq);
+
   const getItems = async (page: number) => {
     try {
       if (categoryId) {
@@ -39,7 +41,14 @@ const Shop = () => {
         }
         if (typeof payload === "object" && payload.rows && payload.count) {
           setTotalPages(Math.ceil(payload.count / 50));
-          setItems(payload.rows);
+          const filteredPayload = payload.rows.filter((item) =>
+            item.name.includes(searchText),
+          );
+          if (filteredPayload.length > 0) {
+            setItems(filteredPayload);
+          } else {
+            setItems([]);
+          }
         }
       } else {
         const { payload } = await dispatch(getAll({ page, limit: 50 }));
@@ -48,7 +57,14 @@ const Shop = () => {
         }
         if (typeof payload === "object" && payload.rows && payload.count) {
           setTotalPages(Math.ceil(payload.count / 50));
-          setItems(payload.rows);
+          const filteredPayload = payload.rows.filter((item) =>
+            item.name.includes(searchText),
+          );
+          if (filteredPayload.length > 0) {
+            setItems(filteredPayload);
+          } else {
+            setItems([]);
+          }
         }
       }
     } catch (error) {
@@ -73,12 +89,30 @@ const Shop = () => {
 
   useEffect(() => {
     getItems(Number(currentPage));
-  }, [currentPage, categoryId]);
+  }, [currentPage, categoryId, searchText]);
 
   useEffect(() => {
-    setItems(data.rows);
-    setTotalPages(Math.ceil(data.count / 50));
-  }, [data]);
+    dispatch(itemActions.searchClear());
+  }, [categoryId]);
+
+  useEffect(() => {
+    if (data.rows.length > 0) {
+      const filteredItems = data.rows.filter((item) =>
+        item.name.toLowerCase().includes(searchText.toLowerCase()),
+      );
+      setItems(filteredItems);
+
+      // Обновляем totalPages после фильтрации
+      if (filteredItems.length > 0) {
+        setTotalPages(Math.ceil(filteredItems.length / 50));
+      } else {
+        setTotalPages(0);
+      }
+    } else {
+      setItems([]);
+      setTotalPages(0);
+    }
+  }, [data, searchText]);
 
   return (
     <div>
@@ -92,7 +126,7 @@ const Shop = () => {
           "В данной категории товаров нет"
         ))}
 
-      {!isLoading && totalPages > 1 && (
+      {!isLoading && items.length > 0 && !searchText && (
         <Pagination
           currentPage={Number(currentPage)}
           totalPages={totalPages}
