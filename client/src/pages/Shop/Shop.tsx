@@ -42,7 +42,7 @@ const Shop = () => {
         if (typeof payload === "object" && payload.rows && payload.count) {
           setTotalPages(Math.ceil(payload.count / 50));
           const filteredPayload = payload.rows.filter((item) =>
-            item.name.includes(searchText),
+            item.name.toLowerCase().includes(searchText.toLowerCase()),
           );
           if (filteredPayload.length > 0) {
             setItems(filteredPayload);
@@ -58,7 +58,7 @@ const Shop = () => {
         if (typeof payload === "object" && payload.rows && payload.count) {
           setTotalPages(Math.ceil(payload.count / 50));
           const filteredPayload = payload.rows.filter((item) =>
-            item.name.includes(searchText),
+            item.name.toLowerCase().includes(searchText.toLowerCase()),
           );
           if (filteredPayload.length > 0) {
             setItems(filteredPayload);
@@ -89,7 +89,7 @@ const Shop = () => {
 
   useEffect(() => {
     getItems(Number(currentPage));
-  }, [currentPage, categoryId, searchText]);
+  }, [currentPage, categoryId]);
 
   useEffect(() => {
     dispatch(itemActions.searchClear());
