@@ -1,29 +1,40 @@
-import { ChangeEvent, forwardRef, useEffect } from "react";
+import { ChangeEvent, forwardRef, useEffect, useState } from "react";
 import styles from "./Search.module.css";
 import cn from "classnames";
 import { SearchProps } from "./Search.props";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { itemActions } from "../../store/item.slice";
 import { debounce } from "lodash";
+import { RootState } from "../../store/store";
 
 const Search = forwardRef<HTMLInputElement, SearchProps>(function Input(
   { className, isValid = true, ...props },
   ref,
 ) {
   const dispatch = useDispatch();
-  // const searchText = useSelector((state: RootState) => state.item.searchReq);
+  const searchText = useSelector((state: RootState) => state.item.searchReq);
+  const [searchValue, setSearchValue] = useState<string>(searchText);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    dispatch(itemActions.search(event.target.value));
+    setSearchValue(event.target.value);
   };
 
-  const debouncedOnChange = debounce(handleChange, 500);
+  const debouncedSendSearch = debounce(() => {
+    dispatch(itemActions.search(searchValue));
+  }, 500);
+
+  useEffect(() => {
+    if (searchValue) {
+      debouncedSendSearch.cancel();
+      debouncedSendSearch();
+    }
+  }, [searchValue, debouncedSendSearch]);
 
   useEffect(() => {
     return () => {
-      debouncedOnChange.cancel();
+      debouncedSendSearch.cancel();
     };
-  }, [debouncedOnChange]);
+  }, [debouncedSendSearch]);
 
   return (
     <div className={styles["input-wrapper"]}>
@@ -34,8 +45,8 @@ const Search = forwardRef<HTMLInputElement, SearchProps>(function Input(
           [styles["invalid"]]: !isValid,
         })}
         {...props}
-        // value={searchText}
-        onChange={debouncedOnChange}
+        value={searchValue}
+        onChange={handleChange}
       />
       <img className={styles["icon"]} src="/search.svg" alt="search" />
     </div>

@@ -1,11 +1,16 @@
 .header {
   margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 768px;
 }
+
 .line {
   display: flex;
   justify-content: space-between;
   padding: 17px 0;
-  max-width: 512px;
+  max-width: 768px;
 }
 
 .line span {
@@ -13,7 +18,7 @@
 }
 
 .hr {
-  max-width: 512px;
+  max-width: 768px;
   margin: 0;
   border: 1px solid #f1f2f3;
 }
@@ -35,9 +40,12 @@
 }
 
 .chekout {
-  max-width: 512px;
+  max-width: 768px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 70px;
+}
+.clear-cart {
+  background: lightcoral;
 }

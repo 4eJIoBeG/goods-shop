@@ -31,7 +31,7 @@ const Basket = () => {
     .reduce((acc, i) => (acc += i), 0);
 
   const getItem = async (id: number) => {
-    const { data } = await axios.get(`${BASE_URL_API}/items/${id}`);
+    const { data } = await axios.get(`${BASE_URL_API}/item/${id}`);
     return data;
   };
 
@@ -62,9 +62,26 @@ const Basket = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
 
+  const cleanCart = () => {
+    dispatch(cartActions.cleanCart());
+  };
+
   return (
     <>
-      <Header className={styles["header"]}>Корзина</Header>
+      <Header className={styles["header"]}>
+        Корзина{" "}
+        {items.length === 0 ? (
+          ""
+        ) : (
+          <Button
+            className={styles["clear-cart"]}
+            appearence="small"
+            onClick={cleanCart}
+          >
+            Очистить корзину
+          </Button>
+        )}
+      </Header>
       {items.map((item) => {
         const product = cartProducts.find((prod) => prod.id === item.id);
         if (!product) {
@@ -102,9 +119,7 @@ const Basket = () => {
             </div>
           </div>
           <div className={styles["chekout"]}>
-            <Button appearence="big" onClick={chekout}>
-              ОФОРМИТЬ
-            </Button>
+            <Button appearence="big">ОФОРМИТЬ</Button>
           </div>
         </>
       )}

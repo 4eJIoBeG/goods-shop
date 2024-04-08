@@ -16,3 +16,8 @@ export interface ApiResponse {
   rows: Product[];
   сount: number;
 }
+
+export interface Payload {
+  rows: Product[];
+  count: number;
+}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Product } from "../../interfaces/product.interface";
+import { Payload, Product } from "../../interfaces/product.interface";
 import { AxiosError } from "axios";
 import ShopList from "./ShopList/ShopList";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,42 +29,46 @@ const Shop = () => {
   const getItems = async (page: number) => {
     try {
       if (categoryId) {
-        const { payload } = await dispatch(
+        const { payload } = (await dispatch(
           getAllInCategory({
             page,
             limit: 50,
             categoryId: parseInt(categoryId),
           }),
-        );
+        )) as {
+          payload: Payload;
+        };
+
         if (!payload) {
           return;
         }
-        if (typeof payload === "object" && payload.rows && payload.count) {
-          setTotalPages(Math.ceil(payload.count / 50));
-          const filteredPayload = payload.rows.filter((item) =>
-            item.name.toLowerCase().includes(searchText.toLowerCase()),
-          );
-          if (filteredPayload.length > 0) {
-            setItems(filteredPayload);
-          } else {
-            setItems([]);
-          }
+
+        setTotalPages(Math.ceil(payload.count / 50));
+        const filteredPayload = payload.rows.filter((item) =>
+          item.name.toLowerCase().includes(searchText.toLowerCase()),
+        );
+        if (filteredPayload.length > 0) {
+          setItems(filteredPayload);
+        } else {
+          setItems([]);
         }
       } else {
-        const { payload } = await dispatch(getAll({ page, limit: 50 }));
+        const { payload } = (await dispatch(getAll({ page, limit: 50 }))) as {
+          payload: Payload;
+        };
+
         if (!payload) {
           return;
         }
-        if (typeof payload === "object" && payload.rows && payload.count) {
-          setTotalPages(Math.ceil(payload.count / 50));
-          const filteredPayload = payload.rows.filter((item) =>
-            item.name.toLowerCase().includes(searchText.toLowerCase()),
-          );
-          if (filteredPayload.length > 0) {
-            setItems(filteredPayload);
-          } else {
-            setItems([]);
-          }
+
+        setTotalPages(Math.ceil(payload.count / 50));
+        const filteredPayload = payload.rows.filter((item) =>
+          item.name.toLowerCase().includes(searchText.toLowerCase()),
+        );
+        if (filteredPayload.length > 0) {
+          setItems(filteredPayload);
+        } else {
+          setItems([]);
         }
       }
     } catch (error) {

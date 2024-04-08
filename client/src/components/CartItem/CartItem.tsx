@@ -1,12 +1,23 @@
 import styles from "./CartItem.module.css";
 import { CartItemProps } from "./CartItem.props";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
+import { cartActions } from "../../store/cart.slice";
 
 const CartItem = (props: CartItemProps) => {
-  const { name, price, img, count } = props;
+  const { id, name, price, img, count } = props;
 
-  const remove = () => {};
-  const decrease = () => {};
-  const increase = () => {};
+  const dispatch = useDispatch<AppDispatch>();
+
+  const remove = () => {
+    dispatch(cartActions.delete(id));
+  };
+  const decrease = () => {
+    dispatch(cartActions.remove(id));
+  };
+  const increase = () => {
+    dispatch(cartActions.add(id));
+  };
 
   return (
     <div className={styles["item"]}>
