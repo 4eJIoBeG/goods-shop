@@ -1,7 +1,7 @@
 export interface CartItemProps {
   id: number;
   name: string;
-  image: string;
+  img: string;
   price: number;
   count: number;
 }

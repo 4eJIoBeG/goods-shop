@@ -2,7 +2,7 @@ import styles from "./CartItem.module.css";
 import { CartItemProps } from "./CartItem.props";
 
 const CartItem = (props: CartItemProps) => {
-  const { name, price, image, count } = props;
+  const { name, price, img, count } = props;
 
   const remove = () => {};
   const decrease = () => {};
@@ -12,7 +12,7 @@ const CartItem = (props: CartItemProps) => {
     <div className={styles["item"]}>
       <div
         className={styles["image"]}
-        style={{ backgroundImage: `url('${image}')` }}
+        style={{ backgroundImage: `url('${img}')` }}
       ></div>
       <div className={styles["description"]}>
         <div className={styles["name"]}>{name}</div>

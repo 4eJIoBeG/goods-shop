@@ -21,6 +21,7 @@ export const Layout = () => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useSelector((state: RootState) => state.user.token);
   const decodedToken = token ? jwtDecode<JwtInterface>(token) : undefined;
+  const items = useSelector((state: RootState) => state.cart.items);
 
   const getCategory = async () => {
     try {
@@ -78,6 +79,13 @@ export const Layout = () => {
             </Button>
           )}
           <Button className={styles["exit"]} onClick={basket}>
+            {items.length === 0 ? (
+              <span className={styles["empty-cart-count"]}>0</span>
+            ) : (
+              <span className={styles["cart-count"]}>
+                {items.reduce((acc, item) => (acc += item.count), 0)}
+              </span>
+            )}
             Корзина
           </Button>
           <Button className={styles["exit"]} onClick={logout}>
