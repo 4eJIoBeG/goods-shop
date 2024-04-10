@@ -1,3 +1,4 @@
+import styles from "./Pagination.module.css";
 import Button from "../Button/Button";
 
 interface PaginationProps {
@@ -16,7 +17,7 @@ const Pagination = ({
   };
 
   return (
-    <div>
+    <div className={styles["pagination"]}>
       {/* Кнопки для перехода на предыдущую/следующую страницу */}
       <Button
         disabled={currentPage === 1}

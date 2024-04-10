@@ -8,7 +8,7 @@
   flex-direction: column;
   padding: 30px;
   border-right: 1px solid var(--separator-color);
-  width: 200px;
+  width: 300px;
 }
 
 .menu {
