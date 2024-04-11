@@ -1,7 +1,12 @@
 import Modal from "react-bootstrap/Modal";
 import { Form, Button } from "react-bootstrap";
 
-const CreateCategory = ({ show, onHide }) => {
+interface Props {
+  show: boolean;
+  onHide: () => void;
+}
+
+const CreateCategory = ({ show, onHide }: Props) => {
   return (
     <Modal
       show={show}

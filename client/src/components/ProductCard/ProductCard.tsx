@@ -10,6 +10,10 @@ const ProductCard = (props: ProductCardProps) => {
   const { id, name, price, img, code } = props;
   const dispatch = useDispatch<AppDispatch>();
 
+  const imagePath = img.includes("https://hoz-tovari.ru")
+    ? img
+    : import.meta.env.VITE_IMAGE_PATH_API + img;
+
   const add = (event: MouseEvent) => {
     event.preventDefault();
     dispatch(cartActions.add(id));
@@ -20,7 +24,7 @@ const ProductCard = (props: ProductCardProps) => {
       <div className={styles["card"]}>
         <div
           className={styles["header"]}
-          style={{ backgroundImage: `url('${img}')` }}
+          style={{ backgroundImage: `url('${imagePath}')` }}
         >
           <div className={styles["price"]}>
             {price}&nbsp;

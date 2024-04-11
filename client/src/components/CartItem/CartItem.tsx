@@ -6,6 +6,9 @@ import { cartActions } from "../../store/cart.slice";
 
 const CartItem = (props: CartItemProps) => {
   const { id, name, price, img, count } = props;
+  const imagePath = img.includes("https://hoz-tovari.ru")
+    ? img
+    : import.meta.env.VITE_IMAGE_PATH_API + img;
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -23,7 +26,7 @@ const CartItem = (props: CartItemProps) => {
     <div className={styles["item"]}>
       <div
         className={styles["image"]}
-        style={{ backgroundImage: `url('${img}')` }}
+        style={{ backgroundImage: `url('${imagePath}')` }}
       ></div>
       <div className={styles["description"]}>
         <div className={styles["name"]}>{name}</div>

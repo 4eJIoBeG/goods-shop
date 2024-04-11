@@ -2,7 +2,7 @@ const { Item, ItemInfo } = require("../models/models");
 const ApiError = require("../error/ApiError");
 const uuid = require("uuid");
 const path = require("path");
-const { json } = require("sequelize");
+// const { json } = require("sequelize");
 const fs = require("fs").promises;
 
 class ItemController {
@@ -20,6 +20,7 @@ class ItemController {
         code,
         img: fileName,
       });
+      console.log("🚀 ~ ItemController ~ create ~ item:", item.dataValues);
 
       if (info) {
         info = JSON.parse(info);
@@ -32,7 +33,7 @@ class ItemController {
         );
       }
 
-      return res.json(item);
+      return res.json(item.dataValues);
     } catch (error) {
       next(ApiError.badRequest(error.message));
     }

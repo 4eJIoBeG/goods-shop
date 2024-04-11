@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import { BASE_URL_API } from "../helpers/API";
 import { Product } from "../interfaces/product.interface";
+import { RootState } from "./store";
+import { ProductCardProps } from "../components/ProductCard/ProductCard.props";
 
 export interface ItemState {
   items: { rows: Product[]; count: number };
@@ -58,6 +60,33 @@ export const getAll = createAsyncThunk<
       );
     } else {
       return rejectWithValue("Произошла неизвестная ошибка");
+    }
+  }
+});
+
+export const createItem = createAsyncThunk<
+  ProductCardProps,
+  { formData: FormData; token: string },
+  { state: RootState }
+>("item/createItem", async (params: { formData: FormData; token: string }) => {
+  const { formData, token } = params;
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    const { data } = await axios.post(`${BASE_URL_API}/item`, formData, config);
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data.message);
+    } else {
+      throw new Error("Неизвестная ошибка при добавлении товара");
     }
   }
 });
