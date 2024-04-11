@@ -5,7 +5,6 @@ import CartItem from "../../components/CartItem/CartItem";
 import { useEffect, useState } from "react";
 import { Product } from "../../interfaces/product.interface";
 import axios from "axios";
-import { BASE_URL_API } from "../../helpers/API";
 import styles from "./Basket.module.css";
 import Button from "../../components/Button/Button";
 import { useNavigate } from "react-router-dom";
@@ -31,7 +30,9 @@ const Basket = () => {
     .reduce((acc, i) => (acc += i), 0);
 
   const getItem = async (id: number) => {
-    const { data } = await axios.get(`${BASE_URL_API}/item/${id}`);
+    const { data } = await axios.get(
+      `${import.meta.env.VITE_API_URL}/item/${id}`,
+    );
     return data;
   };
 
@@ -43,7 +44,7 @@ const Basket = () => {
   const chekout = async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { data } = await axios.post(
-      `${BASE_URL_API}/order`,
+      `${import.meta.env.VITE_API_URL}/order`,
       {
         products: items,
       },

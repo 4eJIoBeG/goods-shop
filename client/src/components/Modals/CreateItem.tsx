@@ -12,7 +12,6 @@ import {
 } from "react-bootstrap";
 import axios, { AxiosError } from "axios";
 import { Category } from "../../interfaces/category.interface";
-import { BASE_URL_API } from "../../helpers/API";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createItem } from "../../store/item.slice";
@@ -43,7 +42,9 @@ const CreateItem = ({ show, onHide }: Props) => {
 
   const getCategory = async () => {
     try {
-      const { data } = await axios.get<Category[]>(`${BASE_URL_API}/category`);
+      const { data } = await axios.get<Category[]>(
+        `${import.meta.env.VITE_API_URL}/category`,
+      );
       setCategory(data);
     } catch (error) {
       if (error instanceof AxiosError) {

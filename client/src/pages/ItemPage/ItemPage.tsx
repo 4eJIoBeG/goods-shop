@@ -7,23 +7,11 @@ import { AppDispatch } from "../../store/store";
 import { cartActions } from "../../store/cart.slice";
 import Button from "../../components/Button/Button";
 
-interface Props {
-  id: number;
-  title: string;
-  description: string;
-}
-
 const ItemPage = () => {
   const data = useLoaderData() as ProductCardProps;
   const imagePath = data.img.includes("https://hoz-tovari.ru")
     ? data.img
     : import.meta.env.VITE_IMAGE_PATH_API + data.img;
-  const description: Props[] = [
-    { id: 1, title: "1", description: "1" },
-    { id: 2, title: "2", description: "2" },
-    { id: 3, title: "3", description: "3" },
-    { id: 4, title: "4", description: "4" },
-  ];
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -31,7 +19,6 @@ const ItemPage = () => {
     event.preventDefault();
     dispatch(cartActions.add(data.id));
   };
-  console.log(data);
 
   return (
     <div>
@@ -43,10 +30,10 @@ const ItemPage = () => {
         {data.price} <span>₽</span>
       </div>
       <div>{data.category_name}</div>
-      {description.length > 0 && (
+      {data.info && data.info.length > 0 && (
         <div>
           <h1>Характеристика товара</h1>
-          {description.map((info, index) => {
+          {data.info?.map((info, index) => {
             return (
               <div key={info.id}>
                 <div

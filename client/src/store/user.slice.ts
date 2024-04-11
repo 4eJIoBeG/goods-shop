@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loadState } from "./storage";
 import { LoginResponse } from "../interfaces/auth.interface";
 import axios, { AxiosError } from "axios";
-import { BASE_URL_API } from "../helpers/API";
 
 export const TOKEN_PERSISTENT_STATE = "userData";
 
@@ -24,7 +23,7 @@ export const login = createAsyncThunk(
   async (params: { email: string; password: string }) => {
     try {
       const { data } = await axios.post<LoginResponse>(
-        `${BASE_URL_API}/user/login`,
+        `${import.meta.env.VITE_API_URL}/user/login`,
         {
           email: params.email,
           password: params.password,
@@ -49,12 +48,15 @@ export const registration = createAsyncThunk(
     phone: string;
   }) => {
     try {
-      const { data } = await axios.post(`${BASE_URL_API}/user/registration`, {
-        email: params.email,
-        password: params.password,
-        name: params.name,
-        phone: params.phone,
-      });
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/user/registration`,
+        {
+          email: params.email,
+          password: params.password,
+          name: params.name,
+          phone: params.phone,
+        },
+      );
 
       return data;
     } catch (error) {

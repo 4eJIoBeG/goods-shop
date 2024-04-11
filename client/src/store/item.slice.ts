@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
-import { BASE_URL_API } from "../helpers/API";
 import { Product } from "../interfaces/product.interface";
 import { RootState } from "./store";
 import { ProductCardProps } from "../components/ProductCard/ProductCard.props";
@@ -28,7 +27,9 @@ export const getAllInCategory = createAsyncThunk<
   async ({ page, limit, categoryId }, { rejectWithValue }) => {
     try {
       const { data } = await axios.get(
-        `${BASE_URL_API}/item?page=${page}&limit=${limit}&categoryId=${categoryId}`,
+        `${
+          import.meta.env.VITE_API_URL
+        }/item?page=${page}&limit=${limit}&categoryId=${categoryId}`,
       );
       return { rows: data.rows, count: data.count };
     } catch (error) {
@@ -50,7 +51,7 @@ export const getAll = createAsyncThunk<
 >("item/getAll", async ({ page, limit }, { rejectWithValue }) => {
   try {
     const { data } = await axios.get(
-      `${BASE_URL_API}/item?page=${page}&limit=${limit}`,
+      `${import.meta.env.VITE_API_URL}/item?page=${page}&limit=${limit}`,
     );
     return { rows: data.rows, count: data.count };
   } catch (error) {
@@ -78,8 +79,11 @@ export const createItem = createAsyncThunk<
       },
     };
 
-    const { data } = await axios.post(`${BASE_URL_API}/item`, formData, config);
-    console.log(data);
+    const { data } = await axios.post(
+      `${import.meta.env.VITE_API_URL}/item`,
+      formData,
+      config,
+    );
 
     return data;
   } catch (error) {
@@ -90,6 +94,26 @@ export const createItem = createAsyncThunk<
     }
   }
 });
+
+export const fetchItemsBySearch = createAsyncThunk(
+  "items/fetchBySearch",
+  async (searchQuery: string, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/item/search?query=${searchQuery}`,
+      );
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return rejectWithValue(
+          error.response?.data.message || "Произошла ошибка",
+        );
+      } else {
+        return rejectWithValue("Произошла неизвестная ошибка");
+      }
+    }
+  },
+);
 
 export const itemSlice = createSlice({
   name: "item",
@@ -116,6 +140,10 @@ export const itemSlice = createSlice({
       }
       state.items.rows = action.payload.rows;
       state.items.count = action.payload.count;
+    });
+    builder.addCase(fetchItemsBySearch.fulfilled, (state, action) => {
+      state.items = action.payload;
+      state.isLoading = false;
     });
   },
 });

@@ -3,15 +3,17 @@ import styles from "./Search.module.css";
 import cn from "classnames";
 import { SearchProps } from "./Search.props";
 import { useDispatch, useSelector } from "react-redux";
-import { itemActions } from "../../store/item.slice";
+import { fetchItemsBySearch } from "../../store/item.slice";
 import { debounce } from "lodash";
-import { RootState } from "../../store/store";
+import { AppDispatch, RootState } from "../../store/store";
+import { useLocation } from "react-router-dom";
 
 const Search = forwardRef<HTMLInputElement, SearchProps>(function Input(
   { className, isValid = true, ...props },
   ref,
 ) {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  const location = useLocation();
   const searchText = useSelector((state: RootState) => state.item.searchReq);
   const [searchValue, setSearchValue] = useState<string>(searchText);
 
@@ -20,8 +22,14 @@ const Search = forwardRef<HTMLInputElement, SearchProps>(function Input(
   };
 
   const debouncedSendSearch = debounce(() => {
-    dispatch(itemActions.search(searchValue));
+    if (searchValue.trim()) {
+      dispatch(fetchItemsBySearch(searchValue));
+    }
   }, 500);
+
+  useEffect(() => {
+    setSearchValue("");
+  }, [location.pathname]);
 
   useEffect(() => {
     if (searchValue) {

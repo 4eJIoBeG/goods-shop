@@ -2,6 +2,7 @@ const { Item, ItemInfo } = require("../models/models");
 const ApiError = require("../error/ApiError");
 const uuid = require("uuid");
 const path = require("path");
+const { Sequelize } = require("sequelize");
 // const { json } = require("sequelize");
 const fs = require("fs").promises;
 
@@ -11,7 +12,11 @@ class ItemController {
       const { name, price, categoryId, info, code, quantity } = req.body;
       const { img } = req.files;
       let fileName = uuid.v4() + ".jpg";
-      img.mv(path.resolve(__dirname, "..", "static", fileName));
+      img.mv(path.resolve(__dirname, "..", "static", fileName), function (err) {
+        if (err) {
+          return res.status(500).send(err);
+        }
+      });
       const item = await Item.create({
         name,
         price,
@@ -23,14 +28,18 @@ class ItemController {
       console.log("🚀 ~ ItemController ~ create ~ item:", item.dataValues);
 
       if (info) {
-        info = JSON.parse(info);
-        info.forEach((i) =>
-          ItemInfo.create({
-            title: i.title,
-            description: i.description,
-            itemId: item.id,
-          }),
-        );
+        try {
+          const parsedInfo = JSON.parse(info);
+          parsedInfo.forEach((i) =>
+            ItemInfo.create({
+              title: i.title,
+              description: i.description,
+              itemId: item.id,
+            }),
+          );
+        } catch (parseError) {
+          return next(ApiError.badRequest("Invalid JSON format for info"));
+        }
       }
 
       return res.json(item.dataValues);
@@ -40,22 +49,20 @@ class ItemController {
   }
 
   async getAll(req, res, next) {
-    let { categoryId, limit, page } = req.query;
-    page = page || 1;
-    limit = limit || 24;
-    let offset = page * limit - limit;
-    let items;
     try {
-      if (!categoryId) {
-        items = await Item.findAndCountAll({ limit, offset });
-      }
+      let { categoryId, limit, page } = req.query;
+      page = page || 1;
+      limit = limit || 24;
+      let offset = page * limit - limit;
+      let where = {};
       if (categoryId) {
-        items = await Item.findAndCountAll({
-          where: { categoryId },
-          limit,
-          offset,
-        });
+        where.categoryId = categoryId;
       }
+      const items = await Item.findAndCountAll({
+        where: where,
+        limit,
+        offset,
+      });
 
       return res.json(items);
     } catch (error) {
@@ -64,8 +71,8 @@ class ItemController {
   }
 
   async getOne(req, res, next) {
-    const { id } = req.params;
     try {
+      const { id } = req.params;
       const item = await Item.findOne({
         where: { id },
         include: [{ model: ItemInfo, as: "info" }],
@@ -90,7 +97,7 @@ class ItemController {
           "static",
           item.dataValues.img,
         );
-        if (await fs.access(imagePath, fs.constants.F_OK)) {
+        if (await fs.access(imagePath, fs.constants.F_OK).catch(() => false)) {
           await fs.unlink(imagePath);
         }
         await Item.destroy({
@@ -100,6 +107,22 @@ class ItemController {
         return res.json({ message: "Товар успешно удален" });
       }
       throw new Error("Товар с указанным ID не найден");
+    } catch (error) {
+      next(ApiError.badRequest(error.message));
+    }
+  }
+
+  async search(req, res, next) {
+    try {
+      const { query } = req.query; // Получаем поисковый запрос из URL
+      const items = await Item.findAndCountAll({
+        where: {
+          name: {
+            [Sequelize.Op.iLike]: `%${query}%`, // Ищем по имени товара, нечувствительно к регистру
+          },
+        },
+      });
+      res.json(items);
     } catch (error) {
       next(ApiError.badRequest(error.message));
     }

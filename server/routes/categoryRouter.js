@@ -1,5 +1,5 @@
-const Router = require("express");
-const router = new Router();
+const express = require("express");
+const router = express.Router();
 const categoryController = require("../controllers/categoryController");
 const checkRole = require("../middleware/checkRoleMiddleware");
 

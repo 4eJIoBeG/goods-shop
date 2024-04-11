@@ -1,7 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from "react-router-dom";
 import Error from "./pages/Error/Error.tsx";
 import Register from "./pages/Register/Register.tsx";
 import Login from "./pages/Login/Login.tsx";
@@ -26,12 +30,21 @@ import {
 } from "./utils/consts.ts";
 import ItemPage from "./pages/ItemPage/ItemPage.tsx";
 import axios from "axios";
-import { BASE_URL_API } from "./helpers/API.ts";
 import { Provider } from "react-redux";
 import { store } from "./store/store.ts";
 import ProfilePage from "./pages/ProfilePage/ProfilePage.tsx";
 
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        path: "/",
+        element: <Navigate to="/items" replace />,
+      },
+    ],
+  },
   {
     path: SHOP_ROUTE,
     element: <Layout />,
@@ -45,7 +58,9 @@ const router = createBrowserRouter([
         element: <ItemPage />,
         errorElement: <Error />,
         loader: async ({ params }) => {
-          const { data } = await axios.get(`${BASE_URL_API}/item/${params.id}`);
+          const { data } = await axios.get(
+            `${import.meta.env.VITE_API_URL}/item/${params.id}`,
+          );
           return data;
         },
       },
