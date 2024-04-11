@@ -5,6 +5,6 @@ export const SHOP_ROUTE = "/items";
 export const BASKET_ROUTE = "/basket";
 export const ITEM_ROUTE = "/item";
 export const CATEGORY_ROUTE = "/category";
-export const SUCCESS_ROUTE = "success";
+export const SUCCESS_ROUTE = "/success";
 export const AUTH_ROUTE = "/auth/";
 export const PROFILE_ROUTE = "/profile";

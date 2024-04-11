@@ -108,7 +108,7 @@ const router = createBrowserRouter([
         element: <Basket />,
       },
       {
-        path: SUCCESS_ROUTE,
+        path: `${BASKET_ROUTE}+${SUCCESS_ROUTE}`,
         element: <Success />,
       },
     ],

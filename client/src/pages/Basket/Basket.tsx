@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import Header from "../../components/Header/Header";
-import { RootState } from "../../store/store";
+import { AppDispatch, RootState } from "../../store/store";
 import CartItem from "../../components/CartItem/CartItem";
 import { useEffect, useState } from "react";
 import { Product } from "../../interfaces/product.interface";
@@ -9,6 +9,8 @@ import styles from "./Basket.module.css";
 import Button from "../../components/Button/Button";
 import { useNavigate } from "react-router-dom";
 import { cartActions } from "../../store/cart.slice";
+import { jwtDecode } from "jwt-decode";
+import { JwtInterface } from "../../interfaces/jwtDecode.interface";
 
 const DELIVERY_FEE = 169;
 
@@ -16,8 +18,10 @@ const Basket = () => {
   const [cartProducts, setCartProducts] = useState<Product[]>([]);
   const items = useSelector((state: RootState) => state.cart.items);
   const token = useSelector((state: RootState) => state.user.token);
+  const decodedToken = token ? jwtDecode<JwtInterface>(token) : undefined;
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  const basketId = useSelector((state: RootState) => state.cart.basketId);
 
   const total = items
     .map((item) => {
@@ -42,20 +46,30 @@ const Basket = () => {
   };
 
   const chekout = async () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { data } = await axios.post(
-      `${import.meta.env.VITE_API_URL}/order`,
-      {
-        products: items,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/order`,
+        {
+          userId: decodedToken?.id,
+          basketId: basketId,
+          items: items,
         },
-      },
-    );
-    dispatch(cartActions.cleanCart());
-    navigate("/success");
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      dispatch(cartActions.cleanCart());
+      navigate("/success");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.response?.data.message);
+      } else {
+        throw new Error("Ошибка при оформлении заказа...");
+      }
+    }
   };
 
   useEffect(() => {
@@ -120,7 +134,9 @@ const Basket = () => {
             </div>
           </div>
           <div className={styles["chekout"]}>
-            <Button appearence="big">ОФОРМИТЬ</Button>
+            <Button appearence="big" onClick={chekout}>
+              ОФОРМИТЬ
+            </Button>
           </div>
         </>
       )}

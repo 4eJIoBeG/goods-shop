@@ -16,6 +16,10 @@ const Basket = sequelize.define("basket", {
 
 const BasketItem = sequelize.define("basket_id", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  basketId: { type: DataTypes.INTEGER, allowNull: false },
+  itemId: { type: DataTypes.INTEGER, allowNull: false },
+  quantity: { type: DataTypes.INTEGER, defaultValue: 1 },
+  orderId: { type: DataTypes.INTEGER, allowNull: true },
 });
 
 const Item = sequelize.define("item", {
@@ -38,6 +42,13 @@ const ItemInfo = sequelize.define("item_info", {
   description: { type: DataTypes.STRING, allowNull: false },
 });
 
+const Order = sequelize.define("order", {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  userId: { type: DataTypes.INTEGER, allowNull: false },
+  status: { type: DataTypes.STRING, defaultValue: "pending" },
+  totalPrice: { type: DataTypes.FLOAT, allowNull: false },
+});
+
 User.hasOne(Basket);
 Basket.belongsTo(User);
 
@@ -48,9 +59,15 @@ Category.hasMany(Item);
 Item.belongsTo(Category);
 
 Item.hasMany(BasketItem);
-BasketItem.belongsTo(Item);
+BasketItem.belongsTo(Item, { as: "item" });
 
 Item.hasMany(ItemInfo, { as: "info" });
 ItemInfo.belongsTo(Item);
 
-module.exports = { User, Basket, BasketItem, Item, ItemInfo, Category };
+User.hasMany(Order);
+Order.belongsTo(User);
+
+Order.hasMany(BasketItem);
+BasketItem.belongsTo(Order);
+
+module.exports = { User, Basket, BasketItem, Order, Item, ItemInfo, Category };
