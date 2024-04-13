@@ -28,3 +28,7 @@
 .accent:hover {
   background: var(--primary-hover-color);
 }
+
+.button:disabled {
+  opacity: 0.5;
+}

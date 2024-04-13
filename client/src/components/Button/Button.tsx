@@ -7,6 +7,7 @@ const Button = ({
   children,
   className,
   appearence = "small",
+  disabled = false,
   ...props
 }: ButtonProps) => {
   return (
@@ -14,7 +15,9 @@ const Button = ({
       className={cn(styles["button"], styles["accent"], className, {
         [styles["small"]]: appearence === "small",
         [styles["big"]]: appearence === "big",
+        disabled: disabled,
       })}
+      disabled={disabled}
       {...props}
     >
       {children}

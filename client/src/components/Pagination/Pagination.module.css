@@ -1,3 +1,10 @@
 .pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-top: 20px;
+}
+
+.info {
+  margin: 20px;
 }

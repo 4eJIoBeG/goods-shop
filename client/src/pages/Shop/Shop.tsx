@@ -28,6 +28,8 @@ const Shop = () => {
 
   const getItems = async (page: number) => {
     try {
+      setCurrentPage(page); // Обновляем текущую страницу
+      setSearchParams({ page: String(page) });
       if (categoryId) {
         const { payload } = (await dispatch(
           getAllInCategory({
@@ -96,6 +98,8 @@ const Shop = () => {
   }, [currentPage, categoryId]);
 
   useEffect(() => {
+    getItems(1);
+    setCurrentPage(1);
     dispatch(itemActions.searchClear());
   }, [categoryId]);
 
@@ -130,7 +134,7 @@ const Shop = () => {
           "В данной категории товаров нет"
         ))}
 
-      {!isLoading && items.length > 0 && !searchText && (
+      {!isLoading && items.length > 0 && (
         <Pagination
           currentPage={Number(currentPage)}
           totalPages={totalPages}

@@ -25,7 +25,7 @@ const Pagination = ({
       >
         Предыдущая
       </Button>
-      <span>
+      <span className={styles["info"]}>
         Страница {currentPage} из {totalPages}
       </span>
       <Button

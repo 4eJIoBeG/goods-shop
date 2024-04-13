@@ -70,16 +70,16 @@ export const Layout = () => {
         </div>
         <div className={styles["auth"]}>
           {decodedToken && decodedToken.role === "ADMIN" && (
-            <Button className={styles["exit"]} onClick={admin}>
+            <Button className={styles["admin"]} onClick={admin}>
               Админ панель
             </Button>
           )}
           {token && (
-            <Button className={styles["exit"]} onClick={profile}>
+            <Button className={styles["profile"]} onClick={profile}>
               Профиль
             </Button>
           )}
-          <Button className={styles["exit"]} onClick={basket}>
+          <Button className={styles["cart"]} onClick={basket}>
             {items.length === 0 ? (
               <span className={styles["cart-count"]}>0</span>
             ) : (
@@ -131,7 +131,7 @@ export const Layout = () => {
           <Outlet />
         </div>
       </div>
-      <div className={styles["footer"]}>Footer</div>
+      <div className={styles["footer"]}>© Copyright 2024</div>
     </div>
   );
 };

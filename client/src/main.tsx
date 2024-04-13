@@ -18,7 +18,6 @@ import RequireAuth from "./helpers/RequireAuth.tsx";
 import Admin from "./pages/Admin/Admin.tsx";
 import {
   ADMIN_ROUTE,
-  AUTH_ROUTE,
   BASKET_ROUTE,
   CATEGORY_ROUTE,
   ITEM_ROUTE,
@@ -139,21 +138,6 @@ const router = createBrowserRouter([
       },
     ],
   },
-  // {
-  //   path: AUTH_ROUTE,
-  //   element: <AuthLayout />,
-  //   children: [
-  //     {
-  //       path: LOGIN_ROUTE,
-  //       element: <Login />,
-  //     },
-  //     {
-  //       path: REGISTRATION_ROUTE,
-  //       element: <Register />,
-  //     },
-  //   ],
-  // },
-
   {
     path: "*",
     element: <Layout />,
