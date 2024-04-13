@@ -107,26 +107,52 @@ const router = createBrowserRouter([
         path: BASKET_ROUTE,
         element: <Basket />,
       },
+    ],
+  },
+  {
+    path: SUCCESS_ROUTE,
+    element: <Layout />,
+    children: [
       {
-        path: `${BASKET_ROUTE}+${SUCCESS_ROUTE}`,
+        path: SUCCESS_ROUTE,
         element: <Success />,
       },
     ],
   },
   {
-    path: AUTH_ROUTE,
+    path: LOGIN_ROUTE,
     element: <AuthLayout />,
     children: [
       {
         path: LOGIN_ROUTE,
         element: <Login />,
       },
+    ],
+  },
+  {
+    path: REGISTRATION_ROUTE,
+    element: <AuthLayout />,
+    children: [
       {
         path: REGISTRATION_ROUTE,
         element: <Register />,
       },
     ],
   },
+  // {
+  //   path: AUTH_ROUTE,
+  //   element: <AuthLayout />,
+  //   children: [
+  //     {
+  //       path: LOGIN_ROUTE,
+  //       element: <Login />,
+  //     },
+  //     {
+  //       path: REGISTRATION_ROUTE,
+  //       element: <Register />,
+  //     },
+  //   ],
+  // },
 
   {
     path: "*",

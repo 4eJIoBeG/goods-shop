@@ -12,8 +12,6 @@ import { cartActions } from "../../store/cart.slice";
 import { jwtDecode } from "jwt-decode";
 import { JwtInterface } from "../../interfaces/jwtDecode.interface";
 
-const DELIVERY_FEE = 169;
-
 const Basket = () => {
   const [cartProducts, setCartProducts] = useState<Product[]>([]);
   const items = useSelector((state: RootState) => state.cart.items);
@@ -108,28 +106,13 @@ const Basket = () => {
         <>Корзина пуста</>
       ) : (
         <>
-          <div className={styles["line"]}>
-            <div className={styles["text"]}>Итог</div>
-            <div className={styles["price"]}>
-              {total}&nbsp;
-              <span>₽</span>
-            </div>
-          </div>
-          <hr className={styles["hr"]} />
-          <div className={styles["line"]}>
-            <div className={styles["text"]}>Доставка</div>
-            <div className={styles["price"]}>
-              {DELIVERY_FEE}&nbsp;
-              <span>₽</span>
-            </div>
-          </div>
           <hr className={styles["hr"]} />
           <div className={styles["line"]}>
             <div className={styles["text"]}>
               Итог <span>({items.length})</span>
             </div>
             <div className={styles["price"]}>
-              {total + DELIVERY_FEE}&nbsp;
+              {total}&nbsp;
               <span>₽</span>
             </div>
           </div>

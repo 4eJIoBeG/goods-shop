@@ -115,6 +115,36 @@ export const fetchItemsBySearch = createAsyncThunk(
   },
 );
 
+export const addCategory = createAsyncThunk(
+  "items/addCategory",
+  async (
+    { categoryName, token }: { categoryName: string; token: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/category`,
+        { name: categoryName },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return rejectWithValue(
+          error.response?.data.message || "Произошла ошибка",
+        );
+      } else {
+        return rejectWithValue("Произошла неизвестная ошибка");
+      }
+    }
+  },
+);
+
 export const itemSlice = createSlice({
   name: "item",
   initialState,

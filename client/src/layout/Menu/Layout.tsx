@@ -40,7 +40,7 @@ export const Layout = () => {
 
   const logout = () => {
     dispatch(userActions.logout());
-    navigate("/auth/login");
+    navigate("/login");
   };
 
   const basket = () => {

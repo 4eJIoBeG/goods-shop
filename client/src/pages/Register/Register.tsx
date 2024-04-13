@@ -78,7 +78,7 @@ const Register = () => {
 
       <div className={styles["links"]}>
         <div>Есть аккаунт?</div>
-        <Link to="/auth/login">Войти</Link>
+        <Link to="/login">Войти</Link>
       </div>
     </div>
   );

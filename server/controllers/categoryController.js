@@ -3,17 +3,25 @@ const ApiError = require("../error/ApiError");
 
 class CategoryController {
   async create(req, res) {
-    const { name } = req.body;
-    const category = await Category.create({ name });
-    return res.json(category);
+    try {
+      const { name } = req.body;
+      const category = await Category.create({ name });
+      return res.json(category);
+    } catch (error) {
+      next(ApiError.badRequest(error.message));
+    }
   }
   async getAll(req, res) {
-    const category = await Category.findAll();
-    return res.json(category);
+    try {
+      const category = await Category.findAll();
+      return res.json(category);
+    } catch (error) {
+      next(ApiError.badRequest(error.message));
+    }
   }
   async getOne(req, res, next) {
-    const { id } = req.params;
     try {
+      const { id } = req.params;
       const category = await Category.findOne({
         where: { id },
       });

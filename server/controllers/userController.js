@@ -62,7 +62,13 @@ class UserController {
   }
 
   async check(req, res, next) {
-    const token = generateJwt(req.user.id, req.user.email, req.user.role);
+    const token = generateJwt(
+      req.user.id,
+      req.user.email,
+      req.user.role,
+      req.user?.name,
+      req.user?.phone,
+    );
 
     if (!token) {
       return next(ApiError.internal("Ошибка авторизации!"));

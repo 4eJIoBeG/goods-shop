@@ -63,7 +63,7 @@ const Login = () => {
 
       <div className={styles["links"]}>
         <div>Нет аккаунта?</div>
-        <Link to="/auth/registration">Зарегистрироваться</Link>
+        <Link to="/registration">Зарегистрироваться</Link>
       </div>
     </div>
   );
