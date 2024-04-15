@@ -65,7 +65,8 @@ ${products
         product.quantity * product.price
       }</strong> руб.)\n`,
   )
-  .join("\n")}`;
+  .join("\n")}
+	Общая стоимость: <strong>${totalPrice}</strong> руб.`;
 
       await bot.sendMessage(managerChatId, orderMessage, {
         parse_mode: "HTML",

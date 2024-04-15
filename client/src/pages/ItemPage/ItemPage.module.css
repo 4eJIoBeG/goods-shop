@@ -10,3 +10,35 @@
 .add-to-cart:hover {
   background: var(--primary-hover-color);
 }
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
+
+.edit {
+  margin-top: auto;
+  background: cornflowerblue;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.edit:hover {
+  background: dodgerblue;
+}
+
+.delete {
+  margin-top: auto;
+  background: lightcoral;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.delete:hover {
+  background: darksalmon;
+}

@@ -110,9 +110,8 @@
   height: 100px;
   color: #fc86aa;
 }
-.logo img {
-  width: 64px;
-  height: 64px;
+.logo {
+  font-size: 40px;
   margin: 20px;
 }
 .container {

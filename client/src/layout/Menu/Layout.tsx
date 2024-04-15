@@ -63,7 +63,16 @@ export const Layout = () => {
     <div className={styles["layout"]}>
       <div className={styles["navbar"]}>
         <div className={styles["logo"]}>
-          <img src="/scp.png" alt="" />
+          <NavLink
+            to="/items"
+            className={({ isActive }) =>
+              cn(styles["link"], {
+                [styles.active]: isActive,
+              })
+            }
+          >
+            Товары для дома и работы
+          </NavLink>
         </div>
         <div className={styles["search"]}>
           <Search />
