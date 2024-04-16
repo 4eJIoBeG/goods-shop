@@ -7,6 +7,7 @@ router.post("/", checkRole("ADMIN"), itemController.create);
 router.get("/", itemController.getAll);
 router.get("/search", itemController.search);
 router.get("/:id", itemController.getOne);
+router.put("/:id", checkRole("ADMIN"), itemController.update);
 router.delete("/:id", checkRole("ADMIN"), itemController.delete);
 
 module.exports = router;

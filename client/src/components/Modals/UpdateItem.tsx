@@ -14,15 +14,21 @@ import axios, { AxiosError } from "axios";
 import { Category } from "../../interfaces/category.interface";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createItem } from "../../store/item.slice";
+import { updateItem } from "../../store/item.slice";
 import { AppDispatch, RootState } from "../../store/store";
+import { useLoaderData } from "react-router-dom";
+import { ProductCardProps } from "../ProductCard/ProductCard.props";
 
 interface Props {
   show: boolean;
   onHide: () => void;
 }
 
-const CreateItem = ({ show, onHide }: Props) => {
+const UpdateItem = ({ show, onHide }: Props) => {
+  const itemData = useSelector((state: RootState) => state.item.currentItem);
+  console.log(itemData);
+
+  const { id } = useLoaderData() as ProductCardProps;
   const dispatch = useDispatch<AppDispatch>();
   const [category, setCategory] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
@@ -39,6 +45,7 @@ const CreateItem = ({ show, onHide }: Props) => {
   const token = useSelector((state: RootState) => state.user.token) as string;
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string>("");
 
   const getCategory = async () => {
     try {
@@ -74,9 +81,9 @@ const CreateItem = ({ show, onHide }: Props) => {
     setFile(event.target.files?.[0] ?? null);
   };
 
-  const addItem = () => {
+  const updItem = () => {
     setIsLoading(true);
-    if (!name || !price || !quantity || !file || !selectedCategory) {
+    if (!name || !price || !quantity || !file || !selectedCategory || !code) {
       alert("Пожалуйста, заполните все поля.");
       return;
     }
@@ -91,8 +98,10 @@ const CreateItem = ({ show, onHide }: Props) => {
     formData.append("info", JSON.stringify(info));
 
     try {
-      dispatch(createItem({ formData, token }));
+      dispatch(updateItem({ id, formData, token }));
       console.log("Item created.");
+      setMessage("Товар успешно обновлен!");
+      onHide();
     } catch (error) {
       if (error instanceof AxiosError) {
         setError(error.message);
@@ -106,6 +115,18 @@ const CreateItem = ({ show, onHide }: Props) => {
   useEffect(() => {
     getCategory();
   }, []);
+
+  useEffect(() => {
+    getCategory();
+    if (itemData) {
+      setSelectedCategory(itemData.categoryId);
+      setName(itemData.name);
+      setCode(itemData.code);
+      setPrice(itemData.price);
+      setQuantity(itemData.quantity);
+      setInfo(itemData.info);
+    }
+  }, [itemData]);
 
   return (
     <Modal
@@ -141,26 +162,26 @@ const CreateItem = ({ show, onHide }: Props) => {
             value={name}
             onChange={(event) => setName(event.target.value)}
             className="mt-3"
-            placeholder="Введите название товара"
+            placeholder="Введите новое название товара"
           />
           <FormControl
             value={code}
             onChange={(event) => setCode(event.target.value)}
             className="mt-3"
-            placeholder="Введите код товара"
+            placeholder="Введите новый код товара"
           />
           <FormControl
             value={price}
             onChange={(event) => setPrice(Number(event.target.value))}
             className="mt-3"
-            placeholder="Введите стоимость товара"
+            placeholder="Введите новую стоимость товара"
             type="number"
           />
           <FormControl
             value={quantity}
             onChange={(event) => setQuantity(Number(event.target.value))}
             className="mt-3"
-            placeholder="Введите количество товара"
+            placeholder="Введите новое количество товара"
             type="number"
             min={1}
           />
@@ -200,16 +221,17 @@ const CreateItem = ({ show, onHide }: Props) => {
       </Modal.Body>
       {isLoading && "Обрабатываем запрос..."}
       {error && "Произошла ошибка!"}
+      {message}
       <Modal.Footer>
         <Button variant="danger" onClick={onHide}>
           Закрыть
         </Button>
-        <Button variant="success" onClick={addItem}>
-          Добавить
+        <Button variant="success" onClick={updItem}>
+          Обновить
         </Button>
       </Modal.Footer>
     </Modal>
   );
 };
 
-export default CreateItem;
+export default UpdateItem;

@@ -9,6 +9,7 @@ export interface ItemState {
   isLoading: boolean;
   error: string | null;
   searchReq: string | "";
+  currentItem: Product | null;
 }
 
 const initialState: ItemState = {
@@ -16,7 +17,28 @@ const initialState: ItemState = {
   isLoading: false,
   error: null,
   searchReq: "",
+  currentItem: null,
 };
+
+export const getItem = createAsyncThunk(
+  "item/getItem",
+  async (itemId: number, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/item/${itemId}`,
+      );
+      return data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return rejectWithValue(
+          error.response?.data.message || "Произошла ошибка",
+        );
+      } else {
+        return rejectWithValue("Произошла неизвестная ошибка");
+      }
+    }
+  },
+);
 
 export const getAllInCategory = createAsyncThunk<
   { rows: Product[]; count: number },
@@ -145,6 +167,39 @@ export const addCategory = createAsyncThunk(
   },
 );
 
+export const updateItem = createAsyncThunk<
+  ProductCardProps,
+  { id: number; formData: FormData; token: string },
+  { state: RootState }
+>(
+  "item/updateItem",
+  async (params: { id: number; formData: FormData; token: string }) => {
+    const { id, formData, token } = params;
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      const { data } = await axios.put(
+        `${import.meta.env.VITE_API_URL}/item/${id}`,
+        formData,
+        config,
+      );
+
+      return data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.response?.data.message);
+      } else {
+        throw new Error("Неизвестная ошибка при редактировании товара");
+      }
+    }
+  },
+);
+
 export const itemSlice = createSlice({
   name: "item",
   initialState,
@@ -174,6 +229,17 @@ export const itemSlice = createSlice({
     builder.addCase(fetchItemsBySearch.fulfilled, (state, action) => {
       state.items = action.payload;
       state.isLoading = false;
+    });
+    builder.addCase(updateItem.fulfilled, (state, action) => {
+      const itemIndex = state.items.rows.findIndex(
+        (item) => item.id === action.payload.id,
+      );
+      if (itemIndex !== -1) {
+        state.items.rows[itemIndex] = action.payload;
+      }
+    });
+    builder.addCase(getItem.fulfilled, (state, action) => {
+      state.currentItem = action.payload;
     });
   },
 });

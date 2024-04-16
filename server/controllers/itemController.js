@@ -3,7 +3,6 @@ const ApiError = require("../error/ApiError");
 const uuid = require("uuid");
 const path = require("path");
 const { Sequelize } = require("sequelize");
-// const { json } = require("sequelize");
 const fs = require("fs").promises;
 
 class ItemController {
@@ -123,6 +122,57 @@ class ItemController {
         },
       });
       res.json(items);
+    } catch (error) {
+      next(ApiError.badRequest(error.message));
+    }
+  }
+
+  async update(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { name, price, categoryId, info, code, quantity } = req.body;
+      const { img } = req.files;
+      let item = await Item.findOne({ where: { id } });
+
+      if (!item) {
+        throw new Error("Товар с указанным ID не найден");
+      }
+
+      if (img) {
+        let fileName = uuid.v4() + ".jpg";
+        img.mv(
+          path.resolve(__dirname, "..", "static", fileName),
+          function (err) {
+            if (err) {
+              return res.status(500).send(err);
+            }
+          },
+        );
+        item.img = fileName;
+      }
+
+      item.name = name;
+      item.price = price;
+      item.categoryId = categoryId;
+      item.quantity = quantity;
+      item.code = code;
+
+      await item.save();
+
+      if (info) {
+        await ItemInfo.destroy({ where: { itemId: id } });
+
+        const parsedInfo = JSON.parse(info);
+        parsedInfo.forEach((i) =>
+          ItemInfo.create({
+            title: i.title,
+            description: i.description,
+            itemId: id,
+          }),
+        );
+      }
+
+      return res.json(item.dataValues);
     } catch (error) {
       next(ApiError.badRequest(error.message));
     }
