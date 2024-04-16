@@ -1,7 +1,7 @@
 import { useLoaderData } from "react-router-dom";
 import { ProductCardProps } from "../../components/ProductCard/ProductCard.props";
 import BackButton from "../../components/BackButton";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { cartActions } from "../../store/cart.slice";
@@ -10,16 +10,23 @@ import { jwtDecode } from "jwt-decode";
 import { JwtInterface } from "../../interfaces/jwtDecode.interface";
 import styles from "./ItemPage.module.css";
 import UpdateItem from "../../components/Modals/UpdateItem";
+import { Product } from "../../interfaces/product.interface";
 
 const ItemPage = () => {
   const data = useLoaderData() as ProductCardProps;
-  console.log(data);
+  const [newData, setNewData] = useState<Product>(data);
+
+  const itemData = useSelector((state: RootState) => state.item.currentItem);
+
+  useEffect(() => {
+    if (itemData) setNewData(itemData);
+  }, [itemData]);
 
   const token = useSelector((state: RootState) => state.user.token);
   const decodedToken = token ? jwtDecode<JwtInterface>(token) : undefined;
-  const imagePath = data.img.includes("https://hoz-tovari.ru")
-    ? data.img
-    : import.meta.env.VITE_IMAGE_PATH_API + data.img;
+  const imagePath = newData.img.includes("https://hoz-tovari.ru")
+    ? newData.img
+    : import.meta.env.VITE_IMAGE_PATH_API + newData.img;
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -27,7 +34,7 @@ const ItemPage = () => {
 
   const add = (event: MouseEvent) => {
     event.preventDefault();
-    dispatch(cartActions.add(data.id));
+    dispatch(cartActions.add(newData.id));
   };
 
   const handleEditClick = () => {
@@ -45,17 +52,17 @@ const ItemPage = () => {
   return (
     <div>
       <BackButton />
-      <div>Артикул: {data.code}</div>
-      <div>{data.name}</div>
+      <div>Артикул: {newData.code}</div>
+      <div>{newData.name}</div>
       <img src={imagePath} width={300} height={300} alt="" />
       <div>
-        {data.price} <span>₽</span>
+        {newData.price} <span>₽</span>
       </div>
-      <div>{data.category_name}</div>
-      {data.info && data.info.length > 0 && (
+      <div>{newData.category_name}</div>
+      {newData.info && newData.info.length > 0 && (
         <div>
           <h1>Характеристика товара</h1>
-          {data.info?.map((info, index) => {
+          {newData.info?.map((info, index) => {
             return (
               <div key={info.id}>
                 <div

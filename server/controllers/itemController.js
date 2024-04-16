@@ -130,15 +130,17 @@ class ItemController {
   async update(req, res, next) {
     try {
       const { id } = req.params;
+      let updateData = {};
       const { name, price, categoryId, info, code, quantity } = req.body;
-      const { img } = req.files;
+
       let item = await Item.findOne({ where: { id } });
 
       if (!item) {
         throw new Error("Товар с указанным ID не найден");
       }
 
-      if (img) {
+      if (req.files && req.files.img) {
+        const { img } = req.files;
         let fileName = uuid.v4() + ".jpg";
         img.mv(
           path.resolve(__dirname, "..", "static", fileName),
@@ -148,16 +150,16 @@ class ItemController {
             }
           },
         );
-        item.img = fileName;
+        updateData.img = fileName;
       }
 
-      item.name = name;
-      item.price = price;
-      item.categoryId = categoryId;
-      item.quantity = quantity;
-      item.code = code;
+      if (name !== undefined) updateData.name = name;
+      if (price !== undefined) updateData.price = price;
+      if (categoryId !== undefined) updateData.categoryId = categoryId;
+      if (quantity !== undefined) updateData.quantity = quantity;
+      if (code !== undefined) updateData.code = code;
 
-      await item.save();
+      await item.update(updateData);
 
       if (info) {
         await ItemInfo.destroy({ where: { itemId: id } });

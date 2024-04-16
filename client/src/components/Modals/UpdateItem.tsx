@@ -14,8 +14,9 @@ import axios, { AxiosError } from "axios";
 import { Category } from "../../interfaces/category.interface";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateItem } from "../../store/item.slice";
+import { getItem, updateItem } from "../../store/item.slice";
 import { AppDispatch, RootState } from "../../store/store";
+import { Info } from "../../interfaces/product.interface";
 import { useLoaderData } from "react-router-dom";
 import { ProductCardProps } from "../ProductCard/ProductCard.props";
 
@@ -25,18 +26,15 @@ interface Props {
 }
 
 const UpdateItem = ({ show, onHide }: Props) => {
-  const itemData = useSelector((state: RootState) => state.item.currentItem);
-  console.log(itemData);
-
   const { id } = useLoaderData() as ProductCardProps;
+  const itemData = useSelector((state: RootState) => state.item.currentItem);
+
   const dispatch = useDispatch<AppDispatch>();
   const [category, setCategory] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null,
   );
-  const [info, setInfo] = useState<
-    { title: string; description: string; index: number }[]
-  >([]);
+  const [info, setInfo] = useState<Info[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [price, setPrice] = useState<number | string>(0);
   const [code, setCode] = useState<number | string>("");
@@ -62,18 +60,16 @@ const UpdateItem = ({ show, onHide }: Props) => {
   };
 
   const addInfo = () => {
-    setInfo([...info, { title: "", description: "", index: Date.now() }]);
+    setInfo([...info, { title: "", description: "", id: Date.now() }]);
   };
 
-  const removeInfo = (index: number) => {
-    setInfo(info.filter((item) => item.index !== index));
+  const removeInfo = (id: number) => {
+    setInfo(info.filter((item) => item.id !== id));
   };
 
-  const changeInfo = (key: string, value: string, index: number) => {
+  const changeInfo = (key: string, value: string, id: number) => {
     setInfo(
-      info.map((item) =>
-        item.index === index ? { ...item, [key]: value } : item,
-      ),
+      info.map((item) => (item.id === id ? { ...item, [key]: value } : item)),
     );
   };
 
@@ -83,30 +79,48 @@ const UpdateItem = ({ show, onHide }: Props) => {
 
   const updItem = () => {
     setIsLoading(true);
-    if (!name || !price || !quantity || !file || !selectedCategory || !code) {
-      alert("Пожалуйста, заполните все поля.");
-      return;
-    }
 
     const formData = new FormData();
-    formData.append("name", name);
-    formData.append("price", `${price}`);
-    formData.append("categoryId", `${selectedCategory.id}`);
-    formData.append("quantity", `${quantity}`);
-    formData.append("code", `${code}`);
-    formData.append("img", file);
-    formData.append("info", JSON.stringify(info));
+
+    if (name !== itemData?.name) {
+      formData.append("name", name);
+    }
+
+    if (price !== itemData?.price) {
+      formData.append("price", `${price}`);
+    }
+
+    if (selectedCategory?.id !== itemData?.categoryId) {
+      formData.append("categoryId", `${selectedCategory?.id}`);
+    }
+
+    if (quantity !== itemData?.quantity) {
+      formData.append("quantity", `${quantity}`);
+    }
+
+    if (code !== itemData?.code) {
+      formData.append("code", `${code}`);
+    }
+
+    if (file) {
+      formData.append("img", file);
+    }
+
+    if (JSON.stringify(info) !== JSON.stringify(itemData?.info)) {
+      formData.append("info", JSON.stringify(info));
+    }
 
     try {
-      dispatch(updateItem({ id, formData, token }));
-      console.log("Item created.");
+      dispatch(updateItem({ id, formData, token })).unwrap();
+      console.log("Item updated.");
       setMessage("Товар успешно обновлен!");
+      dispatch(getItem(id));
       onHide();
     } catch (error) {
       if (error instanceof AxiosError) {
         setError(error.message);
       }
-      console.error("Ошибка при добавлении товара", error);
+      console.error("Ошибка при обновлении товара", error);
     } finally {
       setIsLoading(false);
     }
@@ -114,19 +128,22 @@ const UpdateItem = ({ show, onHide }: Props) => {
 
   useEffect(() => {
     getCategory();
-  }, []);
+    dispatch(getItem(id));
+  }, [dispatch, id]);
 
   useEffect(() => {
-    getCategory();
-    if (itemData) {
-      setSelectedCategory(itemData.categoryId);
+    if (itemData && category.length > 0) {
+      const foundCategory = category.find(
+        (cat) => cat.id === itemData.categoryId,
+      );
+      setSelectedCategory(foundCategory || null);
       setName(itemData.name);
       setCode(itemData.code);
       setPrice(itemData.price);
       setQuantity(itemData.quantity);
       setInfo(itemData.info);
     }
-  }, [itemData]);
+  }, [itemData, category]);
 
   return (
     <Modal
@@ -191,12 +208,12 @@ const UpdateItem = ({ show, onHide }: Props) => {
             Добавить характеристику
           </Button>
           {info.map((item) => (
-            <Row key={item.index} className="mt-3">
+            <Row key={item.id} className="mt-3">
               <Col md={4}>
                 <FormControl
                   value={item.title}
                   onChange={(event) =>
-                    changeInfo("title", event.target.value, item.index)
+                    changeInfo("title", event.target.value, item.id)
                   }
                   placeholder="Название"
                 />
@@ -205,13 +222,13 @@ const UpdateItem = ({ show, onHide }: Props) => {
                 <FormControl
                   value={item.description}
                   onChange={(event) =>
-                    changeInfo("description", event.target.value, item.index)
+                    changeInfo("description", event.target.value, item.id)
                   }
                   placeholder="Описание"
                 />
               </Col>
               <Col md={4}>
-                <Button variant="danger" onClick={() => removeInfo(item.index)}>
+                <Button variant="danger" onClick={() => removeInfo(item.id)}>
                   Удалить
                 </Button>
               </Col>

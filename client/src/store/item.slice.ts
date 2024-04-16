@@ -235,7 +235,16 @@ export const itemSlice = createSlice({
         (item) => item.id === action.payload.id,
       );
       if (itemIndex !== -1) {
-        state.items.rows[itemIndex] = action.payload;
+        state.items.rows[itemIndex] = {
+          ...state.items.rows[itemIndex],
+          ...action.payload,
+        };
+      }
+      if (state.currentItem && state.currentItem.id === action.payload.id) {
+        state.currentItem = {
+          ...state.currentItem,
+          ...action.payload,
+        };
       }
     });
     builder.addCase(getItem.fulfilled, (state, action) => {
