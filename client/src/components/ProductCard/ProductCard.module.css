@@ -1,11 +1,3 @@
-.header {
-  position: relative;
-  height: 250px;
-  width: 250px;
-  border-radius: 19px;
-  background-size: cover;
-}
-
 .card {
   display: flex;
   flex-direction: column;
@@ -18,8 +10,19 @@
   height: 400px;
 }
 
+.header {
+  position: relative;
+  height: 250px;
+  align-items: center;
+  width: 250px;
+  border-radius: 19px;
+  background-size: cover;
+  margin-top: 10px;
+}
+
 .info {
   padding: 12px;
+  align-self: flex-start;
 }
 
 .title {

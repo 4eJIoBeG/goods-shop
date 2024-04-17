@@ -36,7 +36,8 @@ const UpdateItem = ({ show, onHide }: Props) => {
   );
   const [info, setInfo] = useState<Info[]>([]);
   const [file, setFile] = useState<File | null>(null);
-  const [price, setPrice] = useState<number | string>(0);
+  const [price, setPrice] = useState<number>(0);
+  const [percent, setPercent] = useState<number>(0);
   const [code, setCode] = useState<number | string>("");
   const [quantity, setQuantity] = useState<number | string>(0);
   const [name, setName] = useState<string>("");
@@ -44,6 +45,11 @@ const UpdateItem = ({ show, onHide }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string>("");
+
+  const calculateTotalPrice = (price: number, percent: number) => {
+    const percentageAmount = (price / 100) * percent;
+    return Math.ceil(price + percentageAmount);
+  };
 
   const getCategory = async () => {
     try {
@@ -86,8 +92,8 @@ const UpdateItem = ({ show, onHide }: Props) => {
       formData.append("name", name);
     }
 
-    if (price !== itemData?.price) {
-      formData.append("price", `${price}`);
+    if (calculateTotalPrice(price, percent) !== itemData?.price) {
+      formData.append("price", `${calculateTotalPrice(price, percent)}`);
     }
 
     if (selectedCategory?.id !== itemData?.categoryId) {
@@ -114,6 +120,7 @@ const UpdateItem = ({ show, onHide }: Props) => {
       dispatch(updateItem({ id, formData, token })).unwrap();
       console.log("Item updated.");
       setMessage("Товар успешно обновлен!");
+      setPercent(0);
       dispatch(getItem(id));
       onHide();
     } catch (error) {
@@ -139,9 +146,9 @@ const UpdateItem = ({ show, onHide }: Props) => {
       setSelectedCategory(foundCategory || null);
       setName(itemData.name);
       setCode(itemData.code);
-      setPrice(itemData.price);
-      setQuantity(itemData.quantity);
-      setInfo(itemData.info);
+      setPrice(Number(itemData.price) || 0);
+      setQuantity(itemData.quantity || 0);
+      setInfo(itemData.info || []);
     }
   }, [itemData, category]);
 
@@ -187,13 +194,28 @@ const UpdateItem = ({ show, onHide }: Props) => {
             className="mt-3"
             placeholder="Введите новый код товара"
           />
-          <FormControl
-            value={price}
-            onChange={(event) => setPrice(Number(event.target.value))}
-            className="mt-3"
-            placeholder="Введите новую стоимость товара"
-            type="number"
-          />
+          <Row className="mt-3">
+            <Col md={8}>
+              <FormControl
+                value={price}
+                onChange={(event) => setPrice(Number(event.target.value))}
+                className="mt-3"
+                placeholder="Введите стоимость товара"
+                type="number"
+                min={1}
+              />
+            </Col>
+            <Col md={4}>
+              <FormControl
+                value={percent}
+                onChange={(event) => setPercent(Number(event.target.value))}
+                className="mt-3"
+                placeholder="Введите процент товара"
+                type="number"
+                min={1}
+              />
+            </Col>
+          </Row>
           <FormControl
             value={quantity}
             onChange={(event) => setQuantity(Number(event.target.value))}
@@ -202,6 +224,7 @@ const UpdateItem = ({ show, onHide }: Props) => {
             type="number"
             min={1}
           />
+          количество товара
           <FormControl className="mt-3" type="file" onChange={selectFile} />
           <hr />
           <Button variant="success" onClick={addInfo}>

@@ -57,7 +57,7 @@ export const Layout = () => {
 
   useEffect(() => {
     getCategory();
-  }, []);
+  }, [category]);
 
   return (
     <div className={styles["layout"]}>

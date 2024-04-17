@@ -2,4 +2,25 @@
   display: flex;
   flex-direction: column;
   gap: 30px;
+  width: 700px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 30px;
+  width: 100%;
+}
+
+.add-category {
+  background: rgb(45, 145, 45);
+}
+
+.remove-category {
+  background: rgb(228, 45, 45);
+}
+
+.add-item {
+  background: cornflowerblue;
 }

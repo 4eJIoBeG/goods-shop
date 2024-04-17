@@ -11,6 +11,7 @@ class CategoryController {
       next(ApiError.badRequest(error.message));
     }
   }
+
   async getAll(req, res) {
     try {
       const category = await Category.findAll();
@@ -19,6 +20,7 @@ class CategoryController {
       next(ApiError.badRequest(error.message));
     }
   }
+
   async getOne(req, res, next) {
     try {
       const { id } = req.params;
@@ -26,6 +28,20 @@ class CategoryController {
         where: { id },
       });
       return res.json(category);
+    } catch (error) {
+      next(ApiError.badRequest(error.message));
+    }
+  }
+
+  async delete(req, res, next) {
+    try {
+      const { id } = req.params;
+      const category = await Category.findOne({ where: { id } });
+      if (!category) {
+        return next(ApiError.notFound("Категория не найдена"));
+      }
+      await category.destroy();
+      return res.json({ message: "Категория успешно удалена" });
     } catch (error) {
       next(ApiError.badRequest(error.message));
     }

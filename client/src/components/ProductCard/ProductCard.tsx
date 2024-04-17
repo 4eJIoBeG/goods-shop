@@ -20,8 +20,8 @@ const ProductCard = (props: ProductCardProps) => {
   };
 
   return (
-    <Link to={`/items/item/${id}`} className={styles["link"]}>
-      <div className={styles["card"]}>
+    <div className={styles["card"]}>
+      <Link to={`/items/item/${id}`} className={styles["link"]}>
         <div
           className={styles["header"]}
           style={{ backgroundImage: `url('${imagePath}')` }}
@@ -35,12 +35,14 @@ const ProductCard = (props: ProductCardProps) => {
             <img src="/shop.svg" alt="add-to-cart-icon" />
           </button>
         </div>
-        <div className={styles["info"]}>
-          <div className={styles["description"]}>Артикул: {code}</div>
+      </Link>
+      <div className={styles["info"]}>
+        <div className={styles["description"]}>Артикул: {code}</div>
+        <Link to={`/items/item/${id}`} className={styles["link"]}>
           <div className={styles["title"]}>{name}</div>
-        </div>
+        </Link>
       </div>
-    </Link>
+    </div>
   );
 };
 

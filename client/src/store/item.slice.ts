@@ -40,6 +40,35 @@ export const getItem = createAsyncThunk(
   },
 );
 
+export const removeItem = createAsyncThunk(
+  "item/removeItem",
+  async ({ id, token }: { id: number; token: string }, { rejectWithValue }) => {
+    // const { id, token } = params;
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await axios.delete(
+        `${import.meta.env.VITE_API_URL}/item/${id}`,
+        config,
+      );
+
+      return data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(
+          error.response?.data.message || "Ошибка при удалении товара",
+        );
+      } else {
+        return rejectWithValue("Неизвестная ошибка");
+      }
+    }
+  },
+);
+
 export const getAllInCategory = createAsyncThunk<
   { rows: Product[]; count: number },
   { page: number; limit: number; categoryId: number },
@@ -151,6 +180,31 @@ export const addCategory = createAsyncThunk(
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
+          },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return rejectWithValue(
+          error.response?.data.message || "Произошла ошибка",
+        );
+      } else {
+        return rejectWithValue("Произошла неизвестная ошибка");
+      }
+    }
+  },
+);
+
+export const removeCategory = createAsyncThunk(
+  "items/removeCategory",
+  async ({ id, token }: { id: number; token: string }, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_URL}/category/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
         },
       );

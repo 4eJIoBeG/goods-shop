@@ -4,12 +4,12 @@ export interface ProductCardProps {
   price: number;
   code: string;
   img: string;
-  category_name: string;
-  quantity: number;
-  categoryId: number;
-  createdAt: string;
-  updatedAt: string;
-  info: Info[];
+  category_name?: string;
+  quantity?: number;
+  categoryId?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  info?: Info[];
 }
 
 export interface Info {

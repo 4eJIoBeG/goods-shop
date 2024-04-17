@@ -32,13 +32,19 @@ const CreateItem = ({ show, onHide }: Props) => {
     { title: string; description: string; index: number }[]
   >([]);
   const [file, setFile] = useState<File | null>(null);
-  const [price, setPrice] = useState<number | string>(0);
+  const [price, setPrice] = useState<number>(0);
+  const [percent, setPercent] = useState<number>(0);
   const [code, setCode] = useState<number | string>("");
   const [quantity, setQuantity] = useState<number | string>(0);
   const [name, setName] = useState<string>("");
   const token = useSelector((state: RootState) => state.user.token) as string;
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const calculateTotalPrice = (price: number, percent: number) => {
+    const percentageAmount = (price / 100) * percent;
+    return Math.ceil(price + percentageAmount);
+  };
 
   const getCategory = async () => {
     try {
@@ -83,7 +89,7 @@ const CreateItem = ({ show, onHide }: Props) => {
 
     const formData = new FormData();
     formData.append("name", name);
-    formData.append("price", `${price}`);
+    formData.append("price", `${calculateTotalPrice(price, percent)}`);
     formData.append("categoryId", `${selectedCategory.id}`);
     formData.append("quantity", `${quantity}`);
     formData.append("code", `${code}`);
@@ -93,6 +99,7 @@ const CreateItem = ({ show, onHide }: Props) => {
     try {
       dispatch(createItem({ formData, token }));
       console.log("Item created.");
+      onHide();
     } catch (error) {
       if (error instanceof AxiosError) {
         setError(error.message);
@@ -149,13 +156,28 @@ const CreateItem = ({ show, onHide }: Props) => {
             className="mt-3"
             placeholder="Введите код товара"
           />
-          <FormControl
-            value={price}
-            onChange={(event) => setPrice(Number(event.target.value))}
-            className="mt-3"
-            placeholder="Введите стоимость товара"
-            type="number"
-          />
+          <Row className="mt-3">
+            <Col md={8}>
+              <FormControl
+                value={price}
+                onChange={(event) => setPrice(Number(event.target.value))}
+                className="mt-3"
+                placeholder="Введите стоимость товара"
+                type="number"
+                min={1}
+              />
+            </Col>
+            <Col md={4}>
+              <FormControl
+                value={percent}
+                onChange={(event) => setPercent(Number(event.target.value))}
+                className="mt-3"
+                placeholder="Введите процент товара"
+                type="number"
+                min={1}
+              />
+            </Col>
+          </Row>
           <FormControl
             value={quantity}
             onChange={(event) => setQuantity(Number(event.target.value))}

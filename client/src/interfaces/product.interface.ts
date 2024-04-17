@@ -4,12 +4,12 @@ export interface Product {
   price: number;
   code: string;
   img: string;
-  category_name: string;
-  quantity: number;
-  categoryId: number;
+  category_name?: string;
+  quantity?: number;
+  categoryId?: number;
   createdAt?: string;
   updatedAt?: string;
-  info: Info[];
+  info?: Info[];
 }
 
 export interface Info {

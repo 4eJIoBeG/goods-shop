@@ -96,6 +96,7 @@ class ItemController {
           "static",
           item.dataValues.img,
         );
+        console.log(item);
         if (await fs.access(imagePath, fs.constants.F_OK).catch(() => false)) {
           await fs.unlink(imagePath);
         }

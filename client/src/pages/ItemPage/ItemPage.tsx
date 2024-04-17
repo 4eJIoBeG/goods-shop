@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { ProductCardProps } from "../../components/ProductCard/ProductCard.props";
 import BackButton from "../../components/BackButton";
 import { MouseEvent, useEffect, useState } from "react";
@@ -11,11 +11,12 @@ import { JwtInterface } from "../../interfaces/jwtDecode.interface";
 import styles from "./ItemPage.module.css";
 import UpdateItem from "../../components/Modals/UpdateItem";
 import { Product } from "../../interfaces/product.interface";
+import { removeItem } from "../../store/item.slice";
 
 const ItemPage = () => {
   const data = useLoaderData() as ProductCardProps;
   const [newData, setNewData] = useState<Product>(data);
-
+  const navigate = useNavigate();
   const itemData = useSelector((state: RootState) => state.item.currentItem);
 
   useEffect(() => {
@@ -24,7 +25,7 @@ const ItemPage = () => {
 
   const token = useSelector((state: RootState) => state.user.token);
   const decodedToken = token ? jwtDecode<JwtInterface>(token) : undefined;
-  const imagePath = newData.img.includes("https://hoz-tovari.ru")
+  const imagePath = newData.img.includes(import.meta.env.VITE_IMAGE_MASK)
     ? newData.img
     : import.meta.env.VITE_IMAGE_PATH_API + newData.img;
 
@@ -41,12 +42,26 @@ const ItemPage = () => {
     setItemVisible(true);
   };
 
-  const handleDeleteClick = () => {
-    console.log("deleted");
-
-    // Удалить товар с сервера с помощью API-запроса
-    // Например, вы можете отправить запрос DELETE на сервер
-    // После успешного удаления перенаправьте пользователя на другую страницу или обновите список товаров
+  const handleDeleteClick = async () => {
+    const confirmDelete = window.confirm(
+      "Вы уверены, что хотите удалить этот товар?",
+    );
+    if (confirmDelete) {
+      try {
+        if (token) {
+          await dispatch(removeItem({ id: data.id, token }));
+          console.log("deleted");
+          navigate(-1);
+        } else {
+          console.error("Ошибка: токен отсутствует.");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      // Пользователь отменил удаление
+      console.log("Удаление отменено");
+    }
   };
 
   return (
