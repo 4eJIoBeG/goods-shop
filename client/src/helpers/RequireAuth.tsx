@@ -6,7 +6,7 @@ import { RootState } from "../store/store";
 const RequireAuth = ({ children }: { children: ReactNode }) => {
   const jwt = useSelector((state: RootState) => state.user.token);
   if (!jwt) {
-    return <Navigate to="/auth/login" replace />;
+    return <Navigate to="/login" replace />;
   }
   return children;
 };

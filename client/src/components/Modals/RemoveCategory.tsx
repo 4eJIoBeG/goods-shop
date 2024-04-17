@@ -38,6 +38,7 @@ const RemoveCategory = ({ show, onHide }: Props) => {
           setSelectedCategory(null);
           onHide();
           console.log("Категория удалена");
+          getCategory();
         } else {
           console.error("Ошибка: токен отсутствует.");
         }
@@ -52,7 +53,7 @@ const RemoveCategory = ({ show, onHide }: Props) => {
 
   useEffect(() => {
     getCategory();
-  }, [category]);
+  }, []);
 
   const getCategory = async () => {
     try {

@@ -25,6 +25,7 @@ const CreateCategory = ({ show, onHide }: Props) => {
 
     try {
       dispatch(addCategory({ categoryName, token }));
+
       console.log("Item created.");
       onHide();
     } catch (error) {

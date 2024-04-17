@@ -57,7 +57,7 @@ export const Layout = () => {
 
   useEffect(() => {
     getCategory();
-  }, [category]);
+  }, []);
 
   return (
     <div className={styles["layout"]}>
@@ -88,16 +88,18 @@ export const Layout = () => {
               Профиль
             </Button>
           )}
-          <Button className={styles["cart"]} onClick={basket}>
-            {items.length === 0 ? (
-              <span className={styles["cart-count"]}>0</span>
-            ) : (
-              <span className={styles["cart-count"]}>
-                {items.reduce((acc, item) => (acc += item.count), 0)}
-              </span>
-            )}
-            Корзина
-          </Button>
+          {token && (
+            <Button className={styles["cart"]} onClick={basket}>
+              {items.length === 0 ? (
+                <span className={styles["cart-count"]}>0</span>
+              ) : (
+                <span className={styles["cart-count"]}>
+                  {items.reduce((acc, item) => (acc += item.count), 0)}
+                </span>
+              )}
+              Корзина
+            </Button>
+          )}
           <Button className={styles["exit"]} onClick={logout}>
             {token ? "Выход" : "Авторизация"}
           </Button>

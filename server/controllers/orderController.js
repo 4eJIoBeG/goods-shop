@@ -34,7 +34,7 @@ class OrderController {
 
       const order = await Order.create({
         userId,
-        totalPrice: items.reduce((total, item) => total + item.total, 0),
+        totalPrice,
       });
       console.log(products);
       for (const item of items) {
@@ -44,6 +44,7 @@ class OrderController {
           quantity: item.count,
           price: item.price, // Цена за единицу
           total: item.total, // Общая стоимость
+          orderId: order.id,
         });
       }
 
@@ -86,7 +87,8 @@ ${products
         include: [
           {
             model: BasketItem,
-            include: [{ model: Item }],
+            as: "basket_ids",
+            include: [{ model: Item, as: "item" }],
           },
         ],
       });
@@ -95,7 +97,32 @@ ${products
         return res.status(404).json({ message: "Заказ не найден" });
       }
 
-      res.json(order);
+      // Преобразуйте данные заказа в нужный формат
+      const orderData = {
+        id: order.id,
+        userId: order.userId,
+        status: order.status,
+        totalPrice: order.totalPrice,
+        createdAt: order.createdAt,
+        updatedAt: order.updatedAt,
+        basket_ids: order.basket_ids
+          ? order.basket_ids.map((basketItem) => ({
+              id: basketItem.id,
+              itemId: basketItem.itemId,
+              quantity: basketItem.quantity,
+              price: basketItem.price,
+              total: basketItem.total,
+              item: {
+                id: basketItem.item.id,
+                name: basketItem.item.name,
+                code: basketItem.item.code,
+                price: basketItem.item.price,
+              },
+            }))
+          : [],
+      };
+
+      res.json(orderData);
     } catch (error) {
       next(ApiError.badRequest(error.message));
     }
