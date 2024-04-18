@@ -127,6 +127,51 @@ ${products
       next(ApiError.badRequest(error.message));
     }
   }
+
+  async getAllOrderDetails(req, res, next) {
+    try {
+      const orders = await Order.findAll({
+        include: [
+          {
+            model: BasketItem,
+            as: "basket_ids", // Make sure 'as' matches the association alias
+            include: [
+              {
+                model: Item,
+                as: "item",
+              },
+            ],
+          },
+        ],
+      });
+
+      if (!orders) {
+        return res.status(404).json({ message: "No orders found" });
+      }
+
+      const orderDataList = orders.map((order) => ({
+        id: order.id,
+        userId: order.userId,
+        status: order.status,
+        totalPrice: order.totalPrice,
+        createdAt: order.createdAt,
+        updatedAt: order.updatedAt,
+        items: order.basket_ids.map((basketItem) => ({
+          id: basketItem.id,
+          itemId: basketItem.itemId,
+          quantity: basketItem.quantity,
+          price: basketItem.price,
+          total: basketItem.total,
+          itemDetails: basketItem.item,
+        })),
+      }));
+
+      res.json(orderDataList);
+    } catch (error) {
+      console.error("Error fetching order details:", error);
+      next(ApiError.badRequest(error.message));
+    }
+  }
 }
 
 module.exports = new OrderController();

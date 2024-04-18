@@ -102,6 +102,7 @@ const ItemPage = () => {
             <Button className={styles["delete"]} onClick={handleDeleteClick}>
               Удалить
             </Button>
+            <Button onClick={add}>В корзину</Button>
           </>
         ) : (
           token && <Button onClick={add}>В корзину</Button>
