@@ -1,4 +1,72 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--white-color);
+  border-radius: 19px;
+  box-shadow: 18px 18px 36px 0px rgba(211, 209, 216, 0.25);
+  width: 600px;
+  margin-top: 20px;
+}
+
+.header {
+  position: relative;
+  height: 250px;
+  align-items: center;
+  width: 250px;
+  border-radius: 19px;
+  background-size: cover;
+  margin-top: 10px;
+}
+
+.info {
+  padding: 12px;
+  align-self: flex-start;
+  width: 100%;
+}
+
+.extra-info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: normal;
+  font-style: normal;
+  color: var(--text-color);
+}
+
+.description {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  font-style: normal;
+  color: var(--text-secondary-color);
+}
+
+.price {
+  background: var(--white-color);
+  border-radius: 19px;
+  color: #111719;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: normal;
+  font-style: normal;
+  margin-bottom: 10px;
+}
+
+.currency {
+  color: var(--primary-color);
+}
+
 .add-to-cart {
+  position: absolute;
+  top: 15px;
+  right: 15px;
   background: var(--primary-color);
   border-radius: 50%;
   width: 34px;
@@ -11,10 +79,27 @@
   background: var(--primary-hover-color);
 }
 
+.link {
+  text-decoration: none;
+}
+.add-to-cart {
+  margin-top: auto;
+  background: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.add-to-cart:hover {
+  background: var(--primary-hover-color);
+}
+
 .buttons {
   display: flex;
   flex-direction: row;
   gap: 30px;
+  margin: 20px;
 }
 
 .edit {

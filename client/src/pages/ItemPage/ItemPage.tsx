@@ -65,51 +65,66 @@ const ItemPage = () => {
   };
 
   return (
-    <div>
+    <>
       <BackButton />
-      <div>Артикул: {newData.code}</div>
-      <div>{newData.name}</div>
-      <img src={imagePath} width={300} height={300} alt="" />
-      <div>
-        {newData.price} <span>₽</span>
-      </div>
-      <div>{newData.category_name}</div>
-      {newData.info && newData.info.length > 0 && (
-        <div>
-          <h1>Характеристика товара</h1>
-          {newData.info?.map((info, index) => {
-            return (
-              <div key={info.id}>
-                <div
-                  style={{
-                    background: index % 2 === 0 ? "lightgray" : "transparent",
-                  }}
-                >
-                  {info.title}:{info.description}
-                </div>
-              </div>
-            );
-          })}
+      <div className={styles["card"]}>
+        <div
+          className={styles["header"]}
+          style={{ backgroundImage: `url('${imagePath}')` }}
+        ></div>
+        <div className={styles["info"]}>
+          <div className={styles["description"]}>Артикул: {newData.code}</div>
+          <div className={styles["price"]}>
+            Цена: {newData.price}&nbsp;
+            <span className={styles["currency"]}>₽</span>
+          </div>
+          <div className={styles["title"]}>{newData.name}</div>
+          {newData.info && newData.info.length > 0 && (
+            <div className={styles["extra-info"]}>
+              <h2>Характеристика товара</h2>
+              {newData.info?.map((info, index) => {
+                return (
+                  <div key={info.id}>
+                    <div
+                      style={{
+                        background:
+                          index % 2 === 0 ? "lightgray" : "transparent",
+                      }}
+                      className={styles["extra-info-text"]}
+                    >
+                      <span>{info.title}:</span>
+                      {info.description}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
-      )}
-      <div className={styles["buttons"]}>
-        {decodedToken && decodedToken.role === "ADMIN" ? (
-          <>
-            <Button className={styles["edit"]} onClick={handleEditClick}>
-              Редактировать
-            </Button>
 
-            <Button className={styles["delete"]} onClick={handleDeleteClick}>
-              Удалить
-            </Button>
-            <Button onClick={add}>В корзину</Button>
-          </>
-        ) : (
-          token && <Button onClick={add}>В корзину</Button>
-        )}
+        <div className={styles["buttons"]}>
+          {decodedToken && decodedToken.role === "ADMIN" ? (
+            <>
+              <Button className={styles["edit"]} onClick={handleEditClick}>
+                Редактировать
+              </Button>
+
+              <Button className={styles["delete"]} onClick={handleDeleteClick}>
+                Удалить
+              </Button>
+              {token && (
+                <Button className={styles["add"]} onClick={add}>
+                  В корзину
+                </Button>
+              )}
+            </>
+          ) : (
+            token && <Button onClick={add}>В корзину</Button>
+          )}
+        </div>
+        <UpdateItem show={itemVisible} onHide={() => setItemVisible(false)} />
       </div>
-      <UpdateItem show={itemVisible} onHide={() => setItemVisible(false)} />
-    </div>
+    </>
   );
 };
 
