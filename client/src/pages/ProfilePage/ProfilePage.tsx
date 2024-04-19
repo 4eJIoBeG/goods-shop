@@ -11,10 +11,10 @@ const ProfilePage = () => {
   return (
     <div>
       <BackButton />
-      <h1>
+      <h2>
         Профиль пользователя:{" "}
         {decodedToken?.name ? decodedToken?.name : decodedToken?.email}
-      </h1>
+      </h2>
       <div>E-Mail: {decodedToken?.email}</div>
       <div>
         Телефон:

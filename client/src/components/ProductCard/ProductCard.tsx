@@ -5,6 +5,7 @@ import { MouseEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { cartActions } from "../../store/cart.slice";
+import Button from "../Button/Button";
 
 const ProductCard = (props: ProductCardProps) => {
   const { id, name, price, img, code } = props;
@@ -30,11 +31,6 @@ const ProductCard = (props: ProductCardProps) => {
             {price}&nbsp;
             <span className={styles["currency"]}>₽</span>
           </div>
-          {token && (
-            <button className={styles["add-to-cart"]} onClick={add}>
-              <img src="/shop.svg" alt="add-to-cart-icon" />
-            </button>
-          )}
         </div>
       </Link>
       <div className={styles["info"]}>
@@ -43,6 +39,11 @@ const ProductCard = (props: ProductCardProps) => {
           <div className={styles["title"]}>{name}</div>
         </Link>
       </div>
+      {token && (
+        <Button className={styles["add"]} onClick={add}>
+          <img src="/shop.svg" alt="add-to-cart-icon" /> В корзину
+        </Button>
+      )}
     </div>
   );
 };
