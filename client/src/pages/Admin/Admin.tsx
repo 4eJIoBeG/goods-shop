@@ -57,8 +57,38 @@ const Admin = () => {
 
       <h1>Заказы</h1>
       <div className={styles["orderItem"]}>
-        {/* {orders.map((order: Order) => (
-        ))} */}
+        {orders.map((order: Order) => {
+          return (
+            <div key={order.id}>
+              <div className={styles["order-item"]}>
+                <div>
+                  <strong>Номер заказа: </strong> {order.id}
+                </div>
+                <div>Кто заказал: {order.userId}</div>
+                <div>Статус заказа: {order.status}</div>
+                <div>Список товаров:</div>
+                {order.items.map((item, index: number) => {
+                  return (
+                    <ul key={item.id} className={styles["order-item-list"]}>
+                      <li
+                        style={{
+                          background:
+                            index % 2 === 0 ? "lightgray" : "transparent",
+                        }}
+                      >
+                        <div>Артикул товара: {item.itemDetails.code}</div>
+                        <div>{item.itemDetails.name}</div>
+                        <div>Количество: {item.quantity}</div>
+                      </li>
+                    </ul>
+                  );
+                })}
+                <div>Цена заказа: {order.totalPrice} ₽</div>
+              </div>
+              <hr />
+            </div>
+          );
+        })}
       </div>
 
       <CreateCategory
