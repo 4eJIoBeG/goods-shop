@@ -27,7 +27,7 @@ const ProfilePage = () => {
             Имя:{" "}
             {(decodedToken?.name
               ? decodedToken?.name
-              : "не указан"
+              : "не указано"
             )?.toUpperCase()}
           </div>
           <div className={styles["title"]}>

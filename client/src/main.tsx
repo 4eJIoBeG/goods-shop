@@ -9,7 +9,6 @@ import {
 import Error from "./pages/Error/Error.tsx";
 import Register from "./pages/Register/Register.tsx";
 import Login from "./pages/Login/Login.tsx";
-import AuthLayout from "./layout/Auth/Auth.layout.tsx";
 import { Layout } from "./layout/Menu/Layout.tsx";
 import Success from "./pages/Success/Success.tsx";
 import Shop from "./pages/Shop/Shop.tsx";
@@ -32,6 +31,7 @@ import axios from "axios";
 import { Provider } from "react-redux";
 import { store } from "./store/store.ts";
 import ProfilePage from "./pages/ProfilePage/ProfilePage.tsx";
+import RequireAdminAuth from "./helpers/RequireAdminAuth.tsx";
 
 const router = createBrowserRouter([
   {
@@ -73,9 +73,9 @@ const router = createBrowserRouter([
   {
     path: ADMIN_ROUTE,
     element: (
-      <RequireAuth>
+      <RequireAdminAuth>
         <Layout />
-      </RequireAuth>
+      </RequireAdminAuth>
     ),
     children: [
       {
@@ -100,7 +100,11 @@ const router = createBrowserRouter([
   },
   {
     path: BASKET_ROUTE,
-    element: <Layout />,
+    element: (
+      <RequireAuth>
+        <Layout />
+      </RequireAuth>
+    ),
     children: [
       {
         path: BASKET_ROUTE,
@@ -110,7 +114,11 @@ const router = createBrowserRouter([
   },
   {
     path: SUCCESS_ROUTE,
-    element: <Layout />,
+    element: (
+      <RequireAuth>
+        <Layout />
+      </RequireAuth>
+    ),
     children: [
       {
         path: SUCCESS_ROUTE,
@@ -120,7 +128,7 @@ const router = createBrowserRouter([
   },
   {
     path: LOGIN_ROUTE,
-    element: <AuthLayout />,
+    element: <Layout />,
     children: [
       {
         path: LOGIN_ROUTE,
@@ -130,7 +138,11 @@ const router = createBrowserRouter([
   },
   {
     path: REGISTRATION_ROUTE,
-    element: <AuthLayout />,
+    element: (
+      <RequireAdminAuth>
+        <Layout />
+      </RequireAdminAuth>
+    ),
     children: [
       {
         path: REGISTRATION_ROUTE,

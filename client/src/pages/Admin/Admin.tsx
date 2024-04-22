@@ -6,12 +6,14 @@ import styles from "./Admin.module.css";
 import RemoveCategory from "../../components/Modals/RemoveCategory";
 import axios, { AxiosError } from "axios";
 import { Order } from "../../interfaces/order.interface";
+import { useNavigate } from "react-router-dom";
 
 const Admin = () => {
   const [categoryVisible, setCategoryVisible] = useState(false);
   const [categoryRemoveVisible, setRemoveCategoryVisible] = useState(false);
   const [itemVisible, setItemVisible] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
+  const navigate = useNavigate();
 
   const getOrders = async () => {
     try {
@@ -52,6 +54,9 @@ const Admin = () => {
           className={styles["add-item"]}
         >
           Добавить товар
+        </Button>
+        <Button onClick={() => navigate("/registration")}>
+          Добавить пользователя
         </Button>
       </div>
 

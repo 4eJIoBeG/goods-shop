@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { registration, userActions } from "../../store/user.slice";
 import { FormEvent, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
+import { JwtInterface } from "../../interfaces/jwtDecode.interface";
 
 export type RegisterForm = {
   email: { value: string };
@@ -21,12 +23,12 @@ const Register = () => {
   const { token, registrationErrorMessage } = useSelector(
     (state: RootState) => state.user,
   );
-
+  const decodedToken = token ? jwtDecode<JwtInterface>(token) : undefined;
   useEffect(() => {
-    if (token) {
-      navigate("/");
+    if (decodedToken?.role === "ADMIN") {
+      navigate("/registration");
     }
-  }, [token, navigate]);
+  }, [decodedToken?.role, navigate]);
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();

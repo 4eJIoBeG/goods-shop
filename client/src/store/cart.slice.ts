@@ -28,6 +28,12 @@ export const cartSlice = createSlice({
     delete: (state, action: PayloadAction<number>) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
     },
+    deleteMultiple: (state, action: PayloadAction<number[]>) => {
+      const idsToDelete = action.payload;
+      state.items = state.items.filter(
+        (item) => !idsToDelete.includes(item.id),
+      );
+    },
     remove: (state, action: PayloadAction<number>) => {
       const existed = state.items.find((idx) => idx.id === action.payload);
       if (!existed) {

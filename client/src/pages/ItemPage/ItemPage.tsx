@@ -112,11 +112,9 @@ const ItemPage = () => {
               <Button className={styles["delete"]} onClick={handleDeleteClick}>
                 Удалить
               </Button>
-              {token && (
-                <Button className={styles["add"]} onClick={add}>
-                  В корзину
-                </Button>
-              )}
+              <Button className={styles["add"]} onClick={add}>
+                В корзину
+              </Button>
             </>
           ) : (
             token && <Button onClick={add}>В корзину</Button>

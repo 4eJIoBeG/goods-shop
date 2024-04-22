@@ -59,14 +59,32 @@
   color: var(--primary-color);
 }
 
-.add {
-  margin-bottom: 20px;
-}
-
 .add-to-cart:hover {
   background: var(--primary-hover-color);
 }
 
 .link {
   text-decoration: none;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  margin: 20px;
+}
+
+.delete {
+  margin-top: auto;
+  background: lightcoral;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.delete:hover {
+  background: darksalmon;
 }

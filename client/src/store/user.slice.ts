@@ -92,10 +92,14 @@ export const userSlice = createSlice({
       state.loginErrorMessage = action.error.message;
     });
     builder.addCase(registration.fulfilled, (state, action) => {
-      if (!action.payload) {
-        return;
+      // if (!action.payload) {
+      //   return;
+      // }
+      // state.token = action.payload.token;
+      if (action.payload) {
+        // Redirect to /admin on success
+        window.location.href = "/admin";
       }
-      state.token = action.payload.token;
     });
     builder.addCase(registration.rejected, (state, action) => {
       state.registrationErrorMessage = action.error.message;

@@ -39,13 +39,40 @@ const Basket = () => {
   };
 
   const loadAllItems = async () => {
-    const result = await Promise.all(items.map((item) => getItem(item.id)));
-    setCartProducts(result);
+    try {
+      const results = await Promise.all(
+        items.map(
+          (item) => getItem(item.id).catch(() => null), // Возвращаем null, если товар не найден
+        ),
+      );
+
+      // Определяем отсутствующие товары
+      const missingProductIds = items
+        .map((item, index) => (results[index] === null ? item.id : null))
+        .filter((id) => id !== null) // Удаляем null значения
+        .map((id) => id as number);
+
+      if (missingProductIds.length > 0) {
+        // Удаляем отсутствующие товары из корзины
+        dispatch(cartActions.deleteMultiple(missingProductIds));
+        alert(
+          "Некоторые товары в вашей корзине больше не доступны и были удалены.",
+        );
+      }
+
+      const validProducts = results.filter((product) => product !== null);
+      setCartProducts(validProducts);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.response?.data.message);
+      } else {
+        throw new Error("Ошибка при загрузке товаров...");
+      }
+    }
   };
 
-  const chekout = async () => {
+  const checkout = async () => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/order`,
         {
@@ -117,7 +144,7 @@ const Basket = () => {
             </div>
           </div>
           <div className={styles["chekout"]}>
-            <Button appearence="big" onClick={chekout}>
+            <Button appearence="big" onClick={checkout}>
               ОФОРМИТЬ
             </Button>
           </div>
