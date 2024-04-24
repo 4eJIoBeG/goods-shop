@@ -73,7 +73,7 @@ const Basket = () => {
 
   const checkout = async () => {
     try {
-      const { data } = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_API_URL}/order`,
         {
           userId: decodedToken?.id,

@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import styles from "./Layout.module.css";
 import Button from "../../components/Button/Button";
 import cn from "classnames";
@@ -21,6 +21,8 @@ export const Layout = () => {
   const token = useSelector((state: RootState) => state.user.token);
   const decodedToken = token ? jwtDecode<JwtInterface>(token) : undefined;
   const items = useSelector((state: RootState) => state.cart.items);
+  const location = useLocation();
+  const showSearch = location.pathname.startsWith("/items");
 
   const getCategory = async () => {
     try {
@@ -74,9 +76,7 @@ export const Layout = () => {
             Товары для дома и работы
           </NavLink>
         </div>
-        <div className={styles["search"]}>
-          <Search />
-        </div>
+        <div className={styles["search"]}>{showSearch && <Search />}</div>
         <div className={styles["auth"]}>
           {decodedToken && decodedToken.role === "ADMIN" && (
             <Button className={styles["admin"]} onClick={admin}>
