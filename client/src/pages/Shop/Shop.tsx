@@ -7,6 +7,7 @@ import { AppDispatch, RootState } from "../../store/store";
 import { getAll, getAllInCategory, itemActions } from "../../store/item.slice";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Pagination from "../../components/Pagination/Pagination";
+import Search from "../../components/Search/Search";
 
 const Shop = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,6 +26,7 @@ const Shop = () => {
   const [error, setError] = useState<string | undefined>();
 
   const searchText = useSelector((state: RootState) => state.item.searchReq);
+  const showSearch = location.pathname.startsWith("/items");
 
   const getItems = async (page: number) => {
     try {
@@ -123,7 +125,8 @@ const Shop = () => {
   }, [data, searchText]);
 
   return (
-    <div>
+    <>
+      <>{showSearch && <Search />}</>
       {error && <>Произошла ошибка {error}</>}
       {isLoading && <>Загрузка товаров...</>}
 
@@ -141,7 +144,7 @@ const Shop = () => {
           setCurrentPage={handlePageChange}
         />
       )}
-    </div>
+    </>
   );
 };
 

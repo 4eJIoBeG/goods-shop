@@ -1,8 +1,7 @@
-import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import styles from "./Layout.module.css";
 import Button from "../../components/Button/Button";
 import cn from "classnames";
-import Search from "../../components/Search/Search";
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,23 +9,21 @@ import { AppDispatch, RootState } from "../../store/store";
 import { userActions } from "../../store/user.slice";
 import { jwtDecode } from "jwt-decode";
 import { JwtInterface } from "../../interfaces/jwtDecode.interface";
-import { Category } from "../../interfaces/category.interface";
+import { ICategory } from "../../interfaces/category.interface";
 
 export const Layout = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | undefined>();
-  const [category, setCategory] = useState<Category[]>([]);
+  const [category, setCategory] = useState<ICategory[]>([]);
   const dispatch = useDispatch<AppDispatch>();
   const token = useSelector((state: RootState) => state.user.token);
   const decodedToken = token ? jwtDecode<JwtInterface>(token) : undefined;
   const items = useSelector((state: RootState) => state.cart.items);
-  const location = useLocation();
-  const showSearch = location.pathname.startsWith("/items");
 
   const getCategory = async () => {
     try {
-      const { data } = await axios.get<Category[]>(
+      const { data } = await axios.get<ICategory[]>(
         `${import.meta.env.VITE_API_URL}/category`,
       );
       setCategory(data);
@@ -73,10 +70,10 @@ export const Layout = () => {
               })
             }
           >
-            Товары для дома и работы
+            ЛОГО
           </NavLink>
         </div>
-        <div className={styles["search"]}>{showSearch && <Search />}</div>
+        {/* <div className={styles["search"]}>{showSearch && <Search />}</div> */}
         <div className={styles["auth"]}>
           {decodedToken && decodedToken.role === "ADMIN" && (
             <Button className={styles["admin"]} onClick={admin}>

@@ -91,12 +91,12 @@ export const userSlice = createSlice({
     builder.addCase(login.rejected, (state, action) => {
       state.loginErrorMessage = action.error.message;
     });
-    builder.addCase(registration.fulfilled, (state, action) => {
+    builder.addCase(registration.fulfilled, (action) => {
       // if (!action.payload) {
       //   return;
       // }
       // state.token = action.payload.token;
-      if (action.payload) {
+      if (action) {
         // Redirect to /admin on success
         window.location.href = "/admin";
       }

@@ -32,7 +32,7 @@ const Admin = () => {
   useEffect(() => {
     getOrders();
   }, []);
-  console.log(orders);
+
   return (
     <div className={styles["admin"]}>
       <h1>Панель администратора</h1>

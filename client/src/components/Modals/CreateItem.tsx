@@ -11,7 +11,7 @@ import {
   Col,
 } from "react-bootstrap";
 import axios, { AxiosError } from "axios";
-import { Category } from "../../interfaces/category.interface";
+import { ICategory } from "../../interfaces/category.interface";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createItem } from "../../store/item.slice";
@@ -24,8 +24,8 @@ interface Props {
 
 const CreateItem = ({ show, onHide }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
-  const [category, setCategory] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+  const [category, setCategory] = useState<ICategory[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(
     null,
   );
   const [info, setInfo] = useState<
@@ -48,7 +48,7 @@ const CreateItem = ({ show, onHide }: Props) => {
 
   const getCategory = async () => {
     try {
-      const { data } = await axios.get<Category[]>(
+      const { data } = await axios.get<ICategory[]>(
         `${import.meta.env.VITE_API_URL}/category`,
       );
       setCategory(data);

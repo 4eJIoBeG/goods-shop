@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { removeCategory } from "../../store/item.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { Category } from "../../interfaces/category.interface";
+import { ICategory } from "../../interfaces/category.interface";
 import axios, { AxiosError } from "axios";
 
 interface Props {
@@ -20,8 +20,8 @@ interface Props {
 }
 
 const RemoveCategory = ({ show, onHide }: Props) => {
-  const [category, setCategory] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+  const [category, setCategory] = useState<ICategory[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(
     null,
   );
   const dispatch = useDispatch<AppDispatch>();
@@ -57,7 +57,7 @@ const RemoveCategory = ({ show, onHide }: Props) => {
 
   const getCategory = async () => {
     try {
-      const { data } = await axios.get<Category[]>(
+      const { data } = await axios.get<ICategory[]>(
         `${import.meta.env.VITE_API_URL}/category`,
       );
       setCategory(data);
