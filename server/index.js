@@ -14,8 +14,7 @@ const app = express();
 app.use(
   cors({
     origin: [process.env.HOST],
-    credentials: true,
-    exposedHeaders: "set-cookie",
+    methods: ["GET", "POST", "PUT", "DELETE"],
   }),
 );
 app.use(express.json());
