@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 app.use(
   cors({
-    origin: ["http://localhost:4173"],
+    origin: [process.env.HOST],
     credentials: true,
     exposedHeaders: "set-cookie",
   }),
