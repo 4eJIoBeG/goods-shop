@@ -60,7 +60,6 @@
 
 .avatar {
   border-radius: 50%;
-  margin-bottom: 15px;
   width: 100px;
   box-shadow: 0px 8px 40px rgba(255, 197, 42, 0.25);
 }
@@ -108,7 +107,7 @@
   justify-content: space-between;
   align-items: center;
   background: #6569b8;
-  padding: 50px 0;
+  padding: 15px 0;
   color: #fc86aa;
 }
 .logo {
@@ -125,14 +124,13 @@
   justify-content: center;
   align-items: center;
   background: #6569b8;
-  padding: 50px 0;
+  padding: 15px 0;
   color: white;
 }
 
 .cart,
 .admin,
 .profile {
-  margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: center;
