@@ -100,14 +100,13 @@
   justify-content: space-between;
   align-items: center;
   gap: 30px;
-  margin: 20px;
+  margin: 0 20px;
 }
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: #6569b8;
-  padding: 15px 0;
   color: #fc86aa;
 }
 .logo {
