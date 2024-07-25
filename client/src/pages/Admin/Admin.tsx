@@ -55,7 +55,10 @@ const Admin = () => {
         >
           Добавить товар
         </Button>
-        <Button onClick={() => navigate("/registration")}>
+        <Button
+          onClick={() => navigate("/registration")}
+          className={styles["add-user"]}
+        >
           Добавить пользователя
         </Button>
       </div>

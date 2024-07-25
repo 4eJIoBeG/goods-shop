@@ -33,3 +33,19 @@
   font-style: normal;
   color: var(--text-secondary-color);
 }
+
+.backBtn {
+  margin: 20px;
+}
+
+@media (max-width: 767px) {
+  .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px solid dodgerblue;
+    padding: 20px;
+    width: 100%;
+  }
+}

@@ -32,3 +32,15 @@
 .button:disabled {
   opacity: 0.5;
 }
+
+@media (max-width: 767px) {
+  .small {
+    font-size: 12px;
+    padding: 10px 10px;
+  }
+
+  .big {
+    font-size: 14px;
+    padding: 10px 30px;
+  }
+}

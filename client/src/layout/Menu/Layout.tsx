@@ -10,12 +10,21 @@ import { userActions } from "../../store/user.slice";
 import { jwtDecode } from "jwt-decode";
 import { JwtInterface } from "../../interfaces/jwtDecode.interface";
 import { ICategory } from "../../interfaces/category.interface";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+} from "react-bootstrap";
 
 export const Layout = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | undefined>();
   const [category, setCategory] = useState<ICategory[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(
+    null,
+  );
   const dispatch = useDispatch<AppDispatch>();
   const token = useSelector((state: RootState) => state.user.token);
   const decodedToken = token ? jwtDecode<JwtInterface>(token) : undefined;
@@ -60,50 +69,103 @@ export const Layout = () => {
 
   return (
     <div className={styles["layout"]}>
+      <div className={styles["logo"]}>
+        <NavLink
+          to="/items"
+          className={({ isActive }) =>
+            cn(styles["link"], {
+              [styles.active]: isActive,
+            })
+          }
+        >
+          GOODS-SHOP
+        </NavLink>
+      </div>
       <div className={styles["navbar"]}>
-        <div className={styles["logo"]}>
-          <NavLink
-            to="/items"
-            className={({ isActive }) =>
-              cn(styles["link"], {
-                [styles.active]: isActive,
-              })
-            }
-          >
-            ЛОГО
-          </NavLink>
-        </div>
         {/* <div className={styles["search"]}>{showSearch && <Search />}</div> */}
         <div className={styles["auth"]}>
           {decodedToken && decodedToken.role === "ADMIN" && (
-            <Button className={styles["admin"]} onClick={admin}>
-              Админ панель
+            <Button
+              className={styles["admin"]}
+              appearence="small"
+              onClick={admin}
+            >
+              Админ
             </Button>
           )}
           {token && (
-            <Button className={styles["profile"]} onClick={profile}>
+            <Button
+              className={styles["profile"]}
+              appearence="small"
+              onClick={profile}
+            >
               Профиль
             </Button>
           )}
           {token && (
-            <Button className={styles["cart"]} onClick={basket}>
+            <Button
+              className={styles["cart"]}
+              appearence="small"
+              onClick={basket}
+            >
               {items.length === 0 ? (
-                <span className={styles["cart-count"]}>0</span>
+                "Корзина пуста"
               ) : (
-                <span className={styles["cart-count"]}>
+                <>
+                  {"В корзине "}
                   {items.reduce((acc, item) => (acc += item.count), 0)}
-                </span>
+                </>
               )}
-              Корзина
             </Button>
           )}
-          <Button className={styles["exit"]} onClick={logout}>
+          <Button
+            className={styles["exit"]}
+            appearence="small"
+            onClick={logout}
+          >
             {token ? "Выход" : "Авторизация"}
           </Button>
         </div>
       </div>
       <div className={styles["container"]}>
         <div className={styles["sidebar"]}>
+          <div className={styles["mobile-menu"]}>
+            {/* <NavLink
+              to="/items"
+              className={({ isActive }) =>
+                cn(styles["link"], {
+                  [styles.active]: isActive,
+                })
+              }
+            >
+              Все товары
+            </NavLink> */}
+            <Dropdown>
+              <DropdownToggle>
+                {selectedCategory?.name || "Выберите категорию"}
+              </DropdownToggle>
+              <DropdownMenu>
+                {category.map((cat) => (
+                  <DropdownItem
+                    onClick={() => setSelectedCategory(cat)}
+                    key={cat.id}
+                  >
+                    <NavLink
+                      key={cat.id}
+                      to={`/items/category/${cat.id}`}
+                      className={({ isActive }) =>
+                        cn(styles["link"], {
+                          [styles.active]: isActive,
+                        })
+                      }
+                    >
+                      {cat.name}
+                    </NavLink>
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+          </div>
           <div className={styles["menu"]}>
             {error && <>Произошла ошибка {error}</>}
             <NavLink

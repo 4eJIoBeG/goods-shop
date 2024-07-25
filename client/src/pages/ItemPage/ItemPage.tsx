@@ -66,7 +66,10 @@ const ItemPage = () => {
 
   return (
     <>
-      <BackButton />
+      <div className={styles["backBtn"]}>
+        <BackButton />
+      </div>
+
       <div className={styles["card"]}>
         <div
           className={styles["header"]}

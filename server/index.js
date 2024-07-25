@@ -11,9 +11,13 @@ const path = require("path");
 const PORT = process.env.PORT || 5000;
 
 const app = express();
+
+const allowedOrigins = [
+  process.env.HOST, // Значение по умолчанию, если HOST не определен
+];
 app.use(
   cors({
-    origin: [process.env.HOST],
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE"],
   }),
 );
