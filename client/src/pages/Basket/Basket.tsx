@@ -107,7 +107,7 @@ const Basket = () => {
   };
 
   return (
-    <>
+    <div className={styles["cart-wrapper"]}>
       <Header className={styles["header"]}>
         Корзина{" "}
         {items.length === 0 ? (
@@ -122,35 +122,39 @@ const Basket = () => {
           </Button>
         )}
       </Header>
-      {items.map((item) => {
-        const product = cartProducts.find((prod) => prod.id === item.id);
-        if (!product) {
-          return;
-        }
-        return <CartItem key={product.id} count={item.count} {...product} />;
-      })}
-      {items.length === 0 ? (
-        <>Корзина пуста</>
-      ) : (
-        <>
-          <hr className={styles["hr"]} />
-          <div className={styles["line"]}>
-            <div className={styles["text"]}>
-              Итог <span>({items.length})</span>
+      <div className="items">
+        {items.map((item) => {
+          const product = cartProducts.find((prod) => prod.id === item.id);
+          if (!product) {
+            return;
+          }
+          return <CartItem key={product.id} count={item.count} {...product} />;
+        })}
+      </div>
+      <div className="items-info">
+        {items.length === 0 ? (
+          <>Корзина пуста</>
+        ) : (
+          <>
+            <hr className={styles["hr"]} />
+            <div className={styles["line"]}>
+              <div className={styles["text"]}>
+                Итог <span>({items.length})</span>
+              </div>
+              <div className={styles["price"]}>
+                {total}&nbsp;
+                <span>₽</span>
+              </div>
             </div>
-            <div className={styles["price"]}>
-              {total}&nbsp;
-              <span>₽</span>
+            <div className={styles["chekout"]}>
+              <Button appearence="big" onClick={checkout}>
+                ОФОРМИТЬ
+              </Button>
             </div>
-          </div>
-          <div className={styles["chekout"]}>
-            <Button appearence="big" onClick={checkout}>
-              ОФОРМИТЬ
-            </Button>
-          </div>
-        </>
-      )}
-    </>
+          </>
+        )}
+      </div>
+    </div>
   );
 };
 

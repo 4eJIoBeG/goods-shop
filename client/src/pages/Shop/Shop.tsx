@@ -97,6 +97,7 @@ const Shop = () => {
 
   useEffect(() => {
     getItems(Number(currentPage));
+    window.scrollTo(0, 0);
   }, [currentPage, categoryId]);
 
   useEffect(() => {

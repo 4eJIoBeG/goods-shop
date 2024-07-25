@@ -3,14 +3,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 768px;
+  /* max-width: 768px; */
 }
 
 .line {
   display: flex;
   justify-content: space-between;
   padding: 17px 0;
-  max-width: 768px;
+  /* max-width: 768px; */
 }
 
 .line span {
@@ -18,7 +18,7 @@
 }
 
 .hr {
-  max-width: 768px;
+  /* max-width: 768px; */
   margin: 0;
   border: 1px solid #f1f2f3;
 }
@@ -40,7 +40,7 @@
 }
 
 .chekout {
-  max-width: 768px;
+  /* max-width: 768px; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -48,4 +48,14 @@
 }
 .clear-cart {
   background: lightcoral;
+}
+
+.cart-wrapper {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (max-width: 767px) {
 }

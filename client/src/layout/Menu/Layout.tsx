@@ -22,9 +22,12 @@ export const Layout = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | undefined>();
   const [category, setCategory] = useState<ICategory[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(
-    null,
-  );
+  const [selectedCategory, setSelectedCategory] = useState<ICategory | null>({
+    id: 19,
+    name: "Все товары",
+    createdAt: "asfasf",
+    updatedAt: "dsffsd",
+  });
   const dispatch = useDispatch<AppDispatch>();
   const token = useSelector((state: RootState) => state.user.token);
   const decodedToken = token ? jwtDecode<JwtInterface>(token) : undefined;
@@ -145,8 +148,31 @@ export const Layout = () => {
                 {selectedCategory?.name || "Выберите категорию"}
               </DropdownToggle>
               <DropdownMenu>
+                <DropdownItem
+                  as="div"
+                  onClick={() =>
+                    setSelectedCategory({
+                      id: 19,
+                      name: "Все товары",
+                      createdAt: "",
+                      updatedAt: "",
+                    })
+                  }
+                >
+                  <NavLink
+                    to={`/items`}
+                    className={({ isActive }) =>
+                      cn(styles["link"], {
+                        [styles.active]: isActive,
+                      })
+                    }
+                  >
+                    Все товары
+                  </NavLink>
+                </DropdownItem>
                 {category.map((cat) => (
                   <DropdownItem
+                    as="div"
                     onClick={() => setSelectedCategory(cat)}
                     key={cat.id}
                   >
