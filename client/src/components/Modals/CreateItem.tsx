@@ -129,7 +129,7 @@ const CreateItem = ({ show, onHide }: Props) => {
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <Dropdown className="mt-3">
+          <Dropdown className="mt-1 mb-3">
             <DropdownToggle>
               {selectedCategory?.name || "Выберите категорию"}
             </DropdownToggle>
@@ -144,49 +144,55 @@ const CreateItem = ({ show, onHide }: Props) => {
               ))}
             </DropdownMenu>
           </Dropdown>
+          Название товара
           <FormControl
             value={name}
             onChange={(event) => setName(event.target.value)}
-            className="mt-3"
+            className="mt-1 mb-3"
             placeholder="Введите название товара"
           />
+          Код товара
           <FormControl
             value={code}
             onChange={(event) => setCode(event.target.value)}
-            className="mt-3"
+            className="mt-1 mb-3"
             placeholder="Введите код товара"
           />
           <Row className="mt-3">
             <Col md={8}>
+              Стоимость товара
               <FormControl
                 value={price}
                 onChange={(event) => setPrice(Number(event.target.value))}
-                className="mt-3"
+                className="mt-1 mb-3"
                 placeholder="Введите стоимость товара"
                 type="number"
                 min={1}
               />
             </Col>
             <Col md={4}>
+              Процент товара
               <FormControl
                 value={percent}
                 onChange={(event) => setPercent(Number(event.target.value))}
-                className="mt-3"
+                className="mt-1 mb-3"
                 placeholder="Введите процент товара"
                 type="number"
                 min={1}
               />
             </Col>
           </Row>
+          Количество товара
           <FormControl
             value={quantity}
             onChange={(event) => setQuantity(Number(event.target.value))}
-            className="mt-3"
+            className="mt-1 mb-3"
             placeholder="Введите количество товара"
             type="number"
             min={1}
           />
-          <FormControl className="mt-3" type="file" onChange={selectFile} />
+          Выберите изображение товара
+          <FormControl className="mt-1" type="file" onChange={selectFile} />
           <hr />
           <Button variant="success" onClick={addInfo}>
             Добавить характеристику
