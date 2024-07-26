@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button/Button";
 import Header from "../../components/Header/Header";
 import Input from "../../components/Input/Input";
@@ -75,13 +75,14 @@ const Register = () => {
           <label htmlFor="name">Ваш телефон</label>
           <Input id="phone" name="phone" placeholder="Номер телефона" />
         </div>
-        <Button appearence="big">Зарегистрироваться</Button>
+        <Button appearence="big">Зарегистрировать</Button>
+        {/* <Button appearence="big">Зарегистрироваться</Button> */}
       </form>
 
-      <div className={styles["links"]}>
+      {/* <div className={styles["links"]}>
         <div>Есть аккаунт?</div>
         <Link to="/login">Войти</Link>
-      </div>
+      </div> */}
     </div>
   );
 };

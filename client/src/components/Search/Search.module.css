@@ -24,6 +24,13 @@
   left: 35px;
   top: 40px;
 }
+.icon-clear {
+  position: absolute;
+  right: 35px;
+  top: 35px;
+  border: none;
+  background: none;
+}
 
 @media (max-width: 767px) {
 }

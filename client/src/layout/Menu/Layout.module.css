@@ -191,7 +191,7 @@
   }
   .mobile-menu {
     align-items: center;
-    justify-items: end;
+    justify-content: end;
     width: 100%;
     display: grid;
   }
